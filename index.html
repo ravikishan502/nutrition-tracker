@@ -138,6 +138,69 @@
                 font-size: 30px;
             }
         }
+        /* Study Materials */
+
+.study-list {
+    max-width: 850px;
+    margin: 30px auto;
+}
+
+.study-item {
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+}
+
+.study-button {
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    background: white;
+    color: #173b72;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.study-button:hover {
+    background: #f0f5ff;
+}
+
+.arrow {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.study-content {
+    display: none;
+    padding: 15px 20px;
+    background: #f8faff;
+}
+
+.study-content p {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.download-button {
+    display: inline-block;
+    padding: 10px 16px;
+    background: #173b72;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+    font-weight: 600;
+}
+
+.download-button:hover {
+    background: #0f2b55;
+}
     </style>
 </head>
 
@@ -174,8 +237,191 @@
         </div>
 
     </section>
+<section class="section" id="education">
 
+    <h2>Educational Resources</h2>
 
+    <p>
+        Open Education Point provides useful educational resources, guidance,
+        and videos to help students with exams, assignments, practicals,
+        admissions, and other academic needs.
+    </p>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>🎓 Exam Related Videos</h3>
+            <p>
+                Learn effective exam strategies, preparation tips, and guidance
+                to improve your performance and aim for 75+ marks.
+            </p>
+            <a href="https://www.youtube.com/playlist?list=PLYnF0PWwEp0Y" target="_blank">
+                Watch Videos
+            </a>
+        </div>
+
+        <div class="card">
+            <h3>🔔 Most Important Notifications</h3>
+            <p>
+                Stay updated with important NIOS notifications, announcements,
+                exam updates, and other information students need to know.
+            </p>
+            <a href="https://www.youtube.com/playlist?list=PLRx4-a41WH90" target="_blank">
+                Watch Videos
+            </a>
+        </div>
+
+        <div class="card">
+            <h3>📖 Theory Exam Videos</h3>
+            <p>
+                Get useful guidance, preparation tips, and important information
+                to help you prepare confidently for your NIOS theory examinations.
+            </p>
+            <a href="https://www.youtube.com/playlist?list=PLFoXrLW2U-fQ" target="_blank">
+                Watch Videos
+            </a>
+        </div>
+
+        <div class="card">
+            <h3>📝 Practical Exam Videos</h3>
+            <p>
+                Understand practical exam preparation, important instructions,
+                and useful guidance to perform better in NIOS practical examinations.
+            </p>
+            <a href="https://www.youtube.com/playlist?list=PLSuwWU-r2Gj4" target="_blank">
+                Watch Videos
+            </a>
+        </div>
+
+        <div class="card">
+            <h3>📚 NIOS Admission Guidance</h3>
+            <p>
+                Get complete guidance about NIOS admission, eligibility, courses,
+                admission process, examinations, and important academic steps.
+            </p>
+            <a href="https://www.youtube.com/playlist?list=PLE58NVTQVIKuThq82Uky5t-SxEJJ83av4" target="_blank">
+                Watch Videos
+            </a>
+        </div>
+
+        <div class="card">
+            <h3>🎓 University & Board Reality</h3>
+            <p>
+                Explore practical information and honest insights about
+                universities, boards, education systems, and student experiences.
+            </p>
+            <a href="https://www.youtube.com/playlist?list=PLE58NVTQVIKvssQGOQbj3TyjAOCJIlEz" target="_blank">
+                Watch Videos
+            </a>
+        </div>
+
+    </div>
+
+</section>
+<section class="section" id="study-materials">
+
+    <h2>📚 Study Materials</h2>
+
+    <p>
+        Access useful study materials, assignments, sample papers,
+        question papers and exam resources for your preparation.
+    </p>
+
+    <div class="study-list">
+
+        <div class="study-item">
+            <button class="study-button" onclick="toggleStudy('tma')">
+                <span>📚 TMA / Assignments</span>
+                <span class="arrow" id="arrow-tma">+</span>
+            </button>
+
+            <div class="study-content" id="tma">
+                <p>
+                    Access TMA-related materials, assignment guidance
+                    and useful resources for your studies.
+                </p>
+                <a href="#" class="download-button">📥 Download Materials</a>
+            </div>
+        </div>
+
+        <div class="study-item">
+            <button class="study-button" onclick="toggleStudy('sample')">
+                <span>📝 Sample Papers</span>
+                <span class="arrow" id="arrow-sample">+</span>
+            </button>
+
+            <div class="study-content" id="sample">
+                <p>
+                    Practice with sample papers to understand the exam
+                    pattern and improve your preparation.
+                </p>
+                <a href="#" class="download-button">📥 Download Materials</a>
+            </div>
+        </div>
+
+        <div class="study-item">
+            <button class="study-button" onclick="toggleStudy('question')">
+                <span>📄 Previous Question Papers</span>
+                <span class="arrow" id="arrow-question">+</span>
+            </button>
+
+            <div class="study-content" id="question">
+                <p>
+                    Practice previous question papers to understand
+                    important questions and examination patterns.
+                </p>
+                <a href="#" class="download-button">📥 Download Materials</a>
+            </div>
+        </div>
+
+        <div class="study-item">
+            <button class="study-button" onclick="toggleStudy('practical')">
+                <span>🔬 Practical Exam Materials</span>
+                <span class="arrow" id="arrow-practical">+</span>
+            </button>
+
+            <div class="study-content" id="practical">
+                <p>
+                    Find useful practical exam materials, instructions
+                    and preparation resources.
+                </p>
+                <a href="#" class="download-button">📥 Download Materials</a>
+            </div>
+        </div>
+
+        <div class="study-item">
+            <button class="study-button" onclick="toggleStudy('theory')">
+                <span>📖 Theory Exam Materials</span>
+                <span class="arrow" id="arrow-theory">+</span>
+            </button>
+
+            <div class="study-content" id="theory">
+                <p>
+                    Access useful theory exam study materials and
+                    resources for better preparation.
+                </p>
+                <a href="#" class="download-button">📥 Download Materials</a>
+            </div>
+        </div>
+
+        <div class="study-item">
+            <button class="study-button" onclick="toggleStudy('notes')">
+                <span>📋 Important Notes & Guides</span>
+                <span class="arrow" id="arrow-notes">+</span>
+            </button>
+
+            <div class="study-content" id="notes">
+                <p>
+                    Download useful notes, study guides and other
+                    educational resources.
+                </p>
+                <a href="#" class="download-button">📥 Download Materials</a>
+            </div>
+        </div>
+
+    </div>
+
+</section>
     <section class="section" id="services">
 
         <h2>What We Provide</h2>
@@ -228,7 +474,9 @@
             <button class="secondary" onclick="window.open('https://docs.google.com/forms/d/1Z3Zqsr1KmUFf1VZX2bFVwDc9CaClVni-b5BGquNYVqU/viewform', '_blank')">
                 Request a Callback
             </button>
-
+<a class="secondary" href="https://wa.me/919643884146" target="_blank">
+    💬 Contact us on WhatsApp
+</a>
         </div>
 
     </section>
@@ -248,7 +496,34 @@
         function callbackRequest() {
             alert("Callback Request system will be available soon!");
         }
+function toggleStudy(id) {
 
+    const content = document.getElementById(id);
+    const arrow = document.getElementById("arrow-" + id);
+
+    const allContents = document.querySelectorAll(".study-content");
+    const allArrows = document.querySelectorAll(".arrow");
+
+    allContents.forEach(function(item) {
+        if (item.id !== id) {
+            item.style.display = "none";
+        }
+    });
+
+    allArrows.forEach(function(item) {
+        if (item !== arrow) {
+            item.textContent = "+";
+        }
+    });
+
+    if (content.style.display === "block") {
+        content.style.display = "none";
+        arrow.textContent = "+";
+    } else {
+        content.style.display = "block";
+        arrow.textContent = "−";
+    }
+}
     </script>
 
 </body>
