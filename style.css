@@ -1,0 +1,1331 @@
+/* =========================================
+   NUTRITRACK - GLOBAL CSS
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #16a34a;
+    --primary-dark: #15803d;
+    --primary-light: #ecfdf5;
+
+    --background: #f4f7f5;
+    --card: #ffffff;
+
+    --text: #17201a;
+    --muted: #6b7280;
+
+    --border: #e5e7eb;
+
+    --danger: #dc2626;
+    --danger-light: #fee2e2;
+
+    --shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================
+   BODY
+========================================= */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: var(--background);
+
+    color: var(--text);
+
+    line-height: 1.5;
+
+    min-height: 100vh;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.topbar {
+
+    background: var(--card);
+
+    border-bottom: 1px solid var(--border);
+
+    padding: 18px 5%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.brand-icon {
+
+    font-size: 38px;
+}
+
+
+.brand h1 {
+
+    font-size: 25px;
+
+    line-height: 1.2;
+}
+
+
+.brand p {
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    margin-top: 2px;
+}
+
+
+.date-box {
+
+    background: var(--primary-light);
+
+    color: var(--primary-dark);
+
+    padding: 8px 14px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    border: 1px solid #dcfce7;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.container {
+
+    width: 90%;
+
+    max-width: 1250px;
+
+    margin: 30px auto;
+}
+
+
+section {
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================================
+   SECTION TITLES
+========================================= */
+
+.section-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+
+.section-title h2 {
+
+    font-size: 21px;
+
+    line-height: 1.3;
+}
+
+
+.section-title p {
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+    margin-top: 3px;
+}
+
+
+/* =========================================
+   CARDS
+========================================= */
+
+.profile-card,
+.card {
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    margin-bottom: 25px;
+
+    box-shadow: var(--shadow);
+}
+
+
+.profile-card {
+
+    background: linear-gradient(
+        135deg,
+        #ecfdf5 0%,
+        #ffffff 100%
+    );
+
+    border-color: #d1fae5;
+}
+
+
+/* =========================================
+   PROFILE
+========================================= */
+
+.profile-grid {
+
+    margin-top: 20px;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+}
+
+
+.profile-grid > div {
+
+    min-width: 0;
+}
+
+
+.profile-grid label {
+
+    display: block;
+
+    font-size: 13px;
+
+    color: var(--muted);
+
+    margin-bottom: 7px;
+
+    font-weight: 500;
+}
+
+
+/* =========================================
+   INPUTS / SELECT
+========================================= */
+
+input,
+select {
+
+    width: 100%;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    padding: 12px 13px;
+
+    font-size: 14px;
+
+    background: white;
+
+    color: var(--text);
+
+    outline: none;
+
+    transition: 0.2s;
+
+    font-family: inherit;
+}
+
+
+input::placeholder {
+
+    color: #9ca3af;
+}
+
+
+input:hover,
+select:hover {
+
+    border-color: #cbd5e1;
+}
+
+
+input:focus,
+select:focus {
+
+    border-color: var(--primary);
+
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+button {
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 12px 18px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    font-family: inherit;
+}
+
+
+button:hover {
+
+    background: var(--primary-dark);
+
+    transform: translateY(-1px);
+}
+
+
+button:active {
+
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   HEALTH ANALYSIS
+========================================= */
+
+.health-analysis-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-top: 5px;
+}
+
+
+.analysis-card {
+
+    background: #f9fafb;
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    transition: 0.2s;
+}
+
+
+.analysis-card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow);
+}
+
+
+.analysis-icon {
+
+    font-size: 30px;
+
+    margin-bottom: 8px;
+}
+
+
+.analysis-card h3 {
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    margin-bottom: 3px;
+}
+
+
+.analysis-card strong {
+
+    display: block;
+
+    font-size: 30px;
+
+    line-height: 1.3;
+
+    margin-top: 5px;
+
+    color: var(--text);
+}
+
+
+.analysis-card strong small {
+
+    font-size: 12px;
+
+    color: var(--muted);
+
+    font-weight: normal;
+}
+
+
+.analysis-card p {
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    margin-top: 6px;
+}
+
+
+/* =========================================
+   BMR CALCULATOR
+========================================= */
+
+.calculator-box {
+
+    margin-top: 25px;
+
+    padding: 22px;
+
+    border-radius: 16px;
+
+    background: var(--primary-light);
+
+    border: 1px solid #d1fae5;
+}
+
+
+.calculator-box h3 {
+
+    font-size: 18px;
+
+    margin-bottom: 5px;
+}
+
+
+.calculator-box > p {
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+    margin-bottom: 20px;
+}
+
+
+.activity-calculator {
+
+    display: grid;
+
+    grid-template-columns: 1fr auto;
+
+    gap: 15px;
+
+    align-items: end;
+}
+
+
+.activity-calculator label {
+
+    display: block;
+
+    font-size: 13px;
+
+    color: var(--muted);
+
+    margin-bottom: 7px;
+
+    font-weight: 500;
+}
+
+
+.activity-calculator button {
+
+    min-width: 120px;
+}
+
+
+.calorie-breakdown {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+
+.calorie-breakdown div {
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 16px;
+}
+
+
+.calorie-breakdown span {
+
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+.calorie-breakdown strong {
+
+    display: block;
+
+    font-size: 20px;
+
+    margin-top: 5px;
+}
+
+
+/* =========================================
+   TODAY'S NUTRITION
+========================================= */
+
+.summary-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 15px;
+}
+
+
+.summary-card {
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    padding: 20px;
+
+    border-radius: 16px;
+
+    box-shadow: var(--shadow);
+
+    min-width: 0;
+}
+
+
+.summary-icon {
+
+    font-size: 25px;
+
+    margin-bottom: 8px;
+}
+
+
+.summary-card h3 {
+
+    font-size: 14px;
+
+    color: var(--muted);
+
+    font-weight: normal;
+
+    margin-bottom: 3px;
+}
+
+
+.summary-card strong {
+
+    font-size: 25px;
+
+    line-height: 1.3;
+}
+
+
+.target {
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   PROGRESS BARS
+========================================= */
+
+.progress {
+
+    height: 8px;
+
+    background: #e5e7eb;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    margin-top: 12px;
+}
+
+
+.progress div {
+
+    height: 100%;
+
+    width: 0%;
+
+    background: var(--primary);
+
+    border-radius: 20px;
+
+    transition: width 0.4s ease;
+}
+
+
+.progress.large {
+
+    height: 12px;
+}
+
+
+/* =========================================
+   FOOD FORM
+========================================= */
+
+.food-form {
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 12px;
+}
+
+
+.food-form button {
+
+    grid-column: span 4;
+}
+
+
+/* =========================================
+   MEALS
+========================================= */
+
+.meals-section {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+}
+
+
+.meal-card {
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    min-height: 150px;
+
+    box-shadow: var(--shadow);
+}
+
+
+.meal-card h2 {
+
+    font-size: 17px;
+
+    margin-bottom: 15px;
+}
+
+
+.food-item {
+
+    border: 1px solid var(--border);
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    margin-bottom: 8px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background: #ffffff;
+}
+
+
+.food-item strong {
+
+    display: block;
+
+    margin-bottom: 2px;
+}
+
+
+.food-info {
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+.delete-food {
+
+    background: var(--danger-light);
+
+    color: var(--danger);
+
+    padding: 6px 9px;
+
+    flex-shrink: 0;
+}
+
+
+.delete-food:hover {
+
+    background: #fecaca;
+
+}
+
+
+/* =========================================
+   MICRONUTRIENTS
+========================================= */
+
+.micro-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 12px;
+}
+
+
+.micro-item {
+
+    background: #f9fafb;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.micro-item span {
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+.micro-item strong {
+
+    font-size: 14px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   WATER
+========================================= */
+
+.water-box {
+
+    max-width: 700px;
+}
+
+
+.water-number {
+
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 8px;
+}
+
+
+.water-number strong {
+
+    font-size: 40px;
+
+    line-height: 1;
+}
+
+
+.water-number span {
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+.water-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 15px;
+
+    flex-wrap: wrap;
+}
+
+
+.water-buttons button:last-child {
+
+    background: #6b7280;
+}
+
+
+.water-buttons button:last-child:hover {
+
+    background: #4b5563;
+}
+
+
+/* =========================================
+   WEIGHT
+========================================= */
+
+.weight-form {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr auto;
+
+    gap: 12px;
+}
+
+
+.weight-summary {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+
+.weight-summary div,
+.goal-box div,
+.report-grid div {
+
+    background: #f9fafb;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 16px;
+}
+
+
+.weight-summary span,
+.goal-box span,
+.report-grid span {
+
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+.weight-summary strong,
+.goal-box strong,
+.report-grid strong {
+
+    display: block;
+
+    font-size: 22px;
+
+    margin-top: 5px;
+}
+
+
+.weight-history {
+
+    margin-top: 25px;
+}
+
+
+.weight-history h3 {
+
+    font-size: 17px;
+
+    margin-bottom: 10px;
+}
+
+
+.weight-row {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr auto;
+
+    gap: 10px;
+
+    padding: 10px;
+
+    border-bottom: 1px solid var(--border);
+
+    font-size: 14px;
+
+    align-items: center;
+}
+
+
+/* =========================================
+   ACTIVITY
+========================================= */
+
+.activity-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+}
+
+
+.activity-grid label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   GOALS
+========================================= */
+
+.goal-box {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 18px;
+}
+
+
+/* =========================================
+   DAILY REPORT
+========================================= */
+
+.report-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+}
+
+
+/* =========================================
+   RESET
+========================================= */
+
+.danger-zone {
+
+    text-align: center;
+
+    margin-top: 30px;
+}
+
+
+.danger-zone button {
+
+    background: var(--danger);
+}
+
+
+.danger-zone button:hover {
+
+    background: #b91c1c;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+
+    text-align: center;
+
+    color: var(--muted);
+
+    padding: 30px 15px;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .summary-grid {
+
+        grid-template-columns: repeat(3, 1fr);
+
+    }
+
+    .health-analysis-grid {
+
+        grid-template-columns: repeat(3, 1fr);
+
+    }
+
+    .food-form {
+
+        grid-template-columns: repeat(3, 1fr);
+
+    }
+
+    .food-form button {
+
+        grid-column: span 3;
+
+    }
+
+}
+
+
+/* =========================================
+   TABLET / SMALL LAPTOP
+========================================= */
+
+@media (max-width: 900px) {
+
+    .summary-grid {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+
+    .profile-grid {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+
+    .health-analysis-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .food-form {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+
+    .food-form button {
+
+        grid-column: span 2;
+
+    }
+
+
+    .micro-grid {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+
+    .activity-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .report-grid {
+
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+
+    .calorie-breakdown {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .topbar {
+
+        padding: 15px;
+
+    }
+
+
+    .container {
+
+        width: 94%;
+
+        margin-top: 20px;
+
+    }
+
+
+    .brand-icon {
+
+        font-size: 30px;
+
+    }
+
+
+    .brand h1 {
+
+        font-size: 21px;
+
+    }
+
+
+    .brand p {
+
+        font-size: 11px;
+
+    }
+
+
+    .date-box {
+
+        display: none;
+
+    }
+
+
+    .profile-card,
+    .card {
+
+        padding: 18px;
+
+        border-radius: 15px;
+
+    }
+
+
+    .section-title h2 {
+
+        font-size: 19px;
+
+    }
+
+
+    .section-title p {
+
+        font-size: 12px;
+
+    }
+
+
+    .summary-grid,
+    .meals-section,
+    .profile-grid,
+    .micro-grid,
+    .weight-summary,
+    .goal-box,
+    .report-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .food-form {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .food-form button {
+
+        grid-column: span 1;
+
+    }
+
+
+    .weight-form {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .activity-calculator {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .activity-calculator button {
+
+        width: 100%;
+
+    }
+
+
+    .calorie-breakdown {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .water-number strong {
+
+        font-size: 34px;
+
+    }
+
+
+    .food-item {
+
+        align-items: flex-start;
+
+    }
+
+
+    .weight-row {
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 8px;
+
+    }
+
+
+    .analysis-card strong {
+
+        font-size: 27px;
+
+    }
+
+}
