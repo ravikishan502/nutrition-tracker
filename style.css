@@ -1,1331 +1,1701 @@
-/* =========================================
-   NUTRITRACK - GLOBAL CSS
-========================================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+    --primary:#16a34a;
+    --primary-dark:#15803d;
+    --primary-light:#ecfdf5;
+    --accent:#0ea5e9;
+    --accent-light:#e0f2fe;
+    --purple:#7c3aed;
+    --purple-light:#ede9fe;
+    --orange:#f97316;
+    --orange-light:#ffedd5;
+    --red:#ef4444;
+    --red-light:#fee2e2;
+    --yellow:#eab308;
+    --yellow-light:#fef9c3;
+    --blue:#2563eb;
+    --blue-light:#dbeafe;
+    --bg:#f5f7f6;
+    --card:#ffffff;
+    --text:#17201a;
+    --muted:#64748b;
+    --border:#e2e8f0;
+    --shadow:0 8px 30px rgba(15,23,42,.06);
+    --shadow-hover:0 14px 35px rgba(15,23,42,.10);
+}
+
+html{scroll-behavior:smooth}
+
+body{
+    font-family:Inter,Arial,Helvetica,sans-serif;
+    background:
+        radial-gradient(circle at top left,rgba(22,163,74,.06),transparent 28%),
+        linear-gradient(180deg,#f8faf9 0%,#f3f6f4 100%);
+    color:var(--text);
+    line-height:1.5;
+    min-height:100vh;
+}
+
+button,input,select{font:inherit}
+
+button{
+    border:0;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+button:hover{transform:translateY(-1px)}
+
+button:active{transform:translateY(0)}
+
+input,select{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:#fff;
+    color:var(--text);
+    outline:0;
+    transition:.2s ease;
+}
+
+input::placeholder{color:#94a3b8}
+
+input:focus,select:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px rgba(22,163,74,.10);
+}
+
+/* HEADER */
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:100;
+    min-height:76px;
+    padding:14px 5%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(226,232,240,.8);
+    box-shadow:0 3px 20px rgba(15,23,42,.05);
 }
-
-:root {
-    --primary: #16a34a;
-    --primary-dark: #15803d;
-    --primary-light: #ecfdf5;
-
-    --background: #f4f7f5;
-    --card: #ffffff;
-
-    --text: #17201a;
-    --muted: #6b7280;
-
-    --border: #e5e7eb;
 
-    --danger: #dc2626;
-    --danger-light: #fee2e2;
-
-    --shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
-
-
-/* =========================================
-   BODY
-========================================= */
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-
-    background: var(--background);
 
-    color: var(--text);
-
-    line-height: 1.5;
-
-    min-height: 100vh;
+.brand-icon{
+    width:48px;
+    height:48px;
+    display:grid;
+    place-items:center;
+    border-radius:15px;
+    font-size:27px;
+    background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+    box-shadow:0 5px 15px rgba(22,163,74,.12);
 }
-
-
-/* =========================================
-   HEADER
-========================================= */
-
-.topbar {
-
-    background: var(--card);
-
-    border-bottom: 1px solid var(--border);
-
-    padding: 18px 5%;
-
-    display: flex;
-
-    justify-content: space-between;
 
-    align-items: center;
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 100;
-
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+.brand h1{
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:-.5px;
 }
-
 
-.brand {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
+.brand p{
+    color:var(--muted);
+    font-size:12px;
 }
-
-
-.brand-icon {
 
-    font-size: 38px;
+.date-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 15px;
+    border:1px solid #bbf7d0;
+    border-radius:12px;
+    background:var(--primary-light);
+    color:var(--primary-dark);
+    font-size:13px;
+    font-weight:600;
 }
 
+/* MAIN */
 
-.brand h1 {
-
-    font-size: 25px;
-
-    line-height: 1.2;
+.container{
+    width:92%;
+    max-width:1250px;
+    margin:28px auto 50px;
 }
-
-
-.brand p {
-
-    color: var(--muted);
 
-    font-size: 13px;
+section{margin-bottom:24px}
 
-    margin-top: 2px;
+.card,.profile-card{
+    background:rgba(255,255,255,.96);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:24px;
+    margin-bottom:24px;
+    box-shadow:var(--shadow);
+    transition:.25s ease;
 }
-
-
-.date-box {
-
-    background: var(--primary-light);
-
-    color: var(--primary-dark);
-
-    padding: 8px 14px;
-
-    border-radius: 10px;
 
-    font-size: 14px;
-
-    border: 1px solid #dcfce7;
+.card:hover,.profile-card:hover{
+    box-shadow:var(--shadow-hover);
 }
-
-
-/* =========================================
-   MAIN CONTAINER
-========================================= */
-
-.container {
-
-    width: 90%;
 
-    max-width: 1250px;
-
-    margin: 30px auto;
+.profile-card{
+    background:
+        radial-gradient(circle at top right,rgba(16,185,129,.10),transparent 35%),
+        linear-gradient(135deg,#f0fdf4,#fff);
+    border-color:#bbf7d0;
 }
-
 
-section {
+/* TITLES */
 
-    margin-bottom: 25px;
+.section-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
 }
-
-
-/* =========================================
-   SECTION TITLES
-========================================= */
-
-.section-title {
 
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 18px;
+.section-title h2{
+    font-size:21px;
+    font-weight:800;
+    letter-spacing:-.3px;
 }
-
-
-.section-title h2 {
 
-    font-size: 21px;
-
-    line-height: 1.3;
+.section-title p{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:13px;
 }
-
 
-.section-title p {
+/* PROFILE */
 
-    color: var(--muted);
-
-    font-size: 14px;
-
-    margin-top: 3px;
+.profile-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
 }
-
 
-/* =========================================
-   CARDS
-========================================= */
-
-.profile-card,
-.card {
-
-    background: var(--card);
-
-    border: 1px solid var(--border);
-
-    border-radius: 18px;
-
-    padding: 25px;
-
-    margin-bottom: 25px;
-
-    box-shadow: var(--shadow);
+.profile-grid label,
+.activity-grid label,
+.activity-calculator label{
+    display:block;
+    margin-bottom:7px;
+    color:#475569;
+    font-size:13px;
+    font-weight:600;
 }
-
-
-.profile-card {
-
-    background: linear-gradient(
-        135deg,
-        #ecfdf5 0%,
-        #ffffff 100%
-    );
 
-    border-color: #d1fae5;
+.profile-grid button{
+    align-self:end;
+    min-height:45px;
+    background:linear-gradient(135deg,var(--primary),#22c55e);
+    color:#fff;
+    border-radius:12px;
+    font-weight:700;
+    box-shadow:0 6px 15px rgba(22,163,74,.20);
 }
 
-
-/* =========================================
-   PROFILE
-========================================= */
-
-.profile-grid {
-
-    margin-top: 20px;
-
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 15px;
+.profile-grid button:hover{
+    background:linear-gradient(135deg,var(--primary-dark),var(--primary));
 }
 
+/* ANALYSIS */
 
-.profile-grid > div {
-
-    min-width: 0;
+.health-analysis-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
 }
-
-
-.profile-grid label {
-
-    display: block;
-
-    font-size: 13px;
 
-    color: var(--muted);
-
-    margin-bottom: 7px;
-
-    font-weight: 500;
+.analysis-card{
+    position:relative;
+    overflow:hidden;
+    padding:21px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:linear-gradient(145deg,#fff,#f8fafc);
+    transition:.25s ease;
 }
-
-
-/* =========================================
-   INPUTS / SELECT
-========================================= */
-
-input,
-select {
-
-    width: 100%;
-
-    border: 1px solid var(--border);
-
-    border-radius: 10px;
-
-    padding: 12px 13px;
-
-    font-size: 14px;
 
-    background: white;
-
-    color: var(--text);
-
-    outline: none;
-
-    transition: 0.2s;
-
-    font-family: inherit;
+.analysis-card:hover{
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-hover);
 }
-
 
-input::placeholder {
-
-    color: #9ca3af;
+.analysis-card:after{
+    content:"";
+    position:absolute;
+    right:-35px;
+    top:-35px;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:rgba(22,163,74,.06);
 }
-
 
-input:hover,
-select:hover {
-
-    border-color: #cbd5e1;
+.analysis-icon{
+    position:relative;
+    z-index:1;
+    width:44px;
+    height:44px;
+    display:grid;
+    place-items:center;
+    margin-bottom:10px;
+    border-radius:13px;
+    background:var(--primary-light);
+    font-size:23px;
 }
-
-
-input:focus,
-select:focus {
 
-    border-color: var(--primary);
-
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+.analysis-card h3{
+    color:var(--muted);
+    font-size:13px;
+    font-weight:600;
 }
-
-
-/* =========================================
-   BUTTON
-========================================= */
-
-button {
-
-    border: none;
-
-    border-radius: 10px;
-
-    padding: 12px 18px;
-
-    background: var(--primary);
-
-    color: white;
-
-    font-size: 14px;
 
-    font-weight: 500;
-
-    cursor: pointer;
-
-    transition: 0.2s;
-
-    font-family: inherit;
+.analysis-card strong{
+    display:block;
+    margin-top:3px;
+    font-size:30px;
+    line-height:1.25;
+    font-weight:800;
 }
-
-
-button:hover {
 
-    background: var(--primary-dark);
-
-    transform: translateY(-1px);
+.analysis-card strong small{
+    color:var(--muted);
+    font-size:11px;
+    font-weight:500;
 }
-
-
-button:active {
 
-    transform: translateY(0);
+.analysis-card p{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:12px;
 }
-
-
-/* =========================================
-   HEALTH ANALYSIS
-========================================= */
-
-.health-analysis-grid {
 
-    display: grid;
+/* CALCULATOR */
 
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 18px;
-
-    margin-top: 5px;
+.calculator-box{
+    margin-top:20px;
+    padding:21px;
+    border:1px solid #bbf7d0;
+    border-radius:17px;
+    background:linear-gradient(135deg,#ecfdf5,#f0fdf4);
 }
-
-
-.analysis-card {
-
-    background: #f9fafb;
 
-    border: 1px solid var(--border);
-
-    border-radius: 16px;
-
-    padding: 22px;
-
-    transition: 0.2s;
+.calculator-box h3{
+    font-size:17px;
+    font-weight:800;
 }
-
-
-.analysis-card:hover {
 
-    transform: translateY(-2px);
-
-    box-shadow: var(--shadow);
+.calculator-box>p{
+    margin:4px 0 18px;
+    color:var(--muted);
+    font-size:13px;
 }
-
 
-.analysis-icon {
-
-    font-size: 30px;
-
-    margin-bottom: 8px;
+.activity-calculator{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:end;
+    gap:12px;
 }
-
 
-.analysis-card h3 {
-
-    color: var(--muted);
-
-    font-size: 14px;
-
-    font-weight: 500;
-
-    margin-bottom: 3px;
+.activity-calculator button{
+    min-width:120px;
+    min-height:44px;
+    border-radius:11px;
+    background:linear-gradient(135deg,#15803d,#22c55e);
+    color:#fff;
+    font-weight:700;
 }
-
-
-.analysis-card strong {
 
-    display: block;
-
-    font-size: 30px;
-
-    line-height: 1.3;
-
-    margin-top: 5px;
-
-    color: var(--text);
+.calorie-breakdown{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:17px;
 }
-
 
-.analysis-card strong small {
-
-    font-size: 12px;
-
-    color: var(--muted);
-
-    font-weight: normal;
+.calorie-breakdown div{
+    padding:15px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:#fff;
 }
-
-
-.analysis-card p {
 
-    color: var(--muted);
-
-    font-size: 13px;
-
-    margin-top: 6px;
+.calorie-breakdown span{
+    display:block;
+    color:var(--muted);
+    font-size:12px;
 }
-
-
-/* =========================================
-   BMR CALCULATOR
-========================================= */
-
-.calculator-box {
 
-    margin-top: 25px;
-
-    padding: 22px;
-
-    border-radius: 16px;
-
-    background: var(--primary-light);
-
-    border: 1px solid #d1fae5;
+.calorie-breakdown strong{
+    display:block;
+    margin-top:4px;
+    font-size:19px;
 }
-
-
-.calculator-box h3 {
 
-    font-size: 18px;
+/* SUMMARY */
 
-    margin-bottom: 5px;
+.summary-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
 }
 
-
-.calculator-box > p {
-
-    color: var(--muted);
-
-    font-size: 14px;
-
-    margin-bottom: 20px;
+.summary-card{
+    position:relative;
+    overflow:hidden;
+    min-width:0;
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:#fff;
+    box-shadow:var(--shadow);
+    transition:.25s ease;
 }
-
 
-.activity-calculator {
-
-    display: grid;
-
-    grid-template-columns: 1fr auto;
-
-    gap: 15px;
-
-    align-items: end;
+.summary-card:hover{
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-hover);
 }
-
 
-.activity-calculator label {
-
-    display: block;
-
-    font-size: 13px;
-
-    color: var(--muted);
-
-    margin-bottom: 7px;
-
-    font-weight: 500;
+.summary-card:before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:3px;
+    background:var(--primary);
 }
 
+.summary-card.calories:before{background:linear-gradient(90deg,#f97316,#ef4444)}
 
-.activity-calculator button {
-
-    min-width: 120px;
+.summary-icon{
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    margin-bottom:9px;
+    border-radius:12px;
+    background:#f1f5f9;
+    font-size:21px;
 }
-
-
-.calorie-breakdown {
-
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
 
-    gap: 12px;
-
-    margin-top: 20px;
+.summary-card h3{
+    color:var(--muted);
+    font-size:13px;
+    font-weight:600;
 }
-
-
-.calorie-breakdown div {
-
-    background: white;
-
-    border: 1px solid var(--border);
 
-    border-radius: 12px;
-
-    padding: 16px;
+.summary-card strong{
+    font-size:25px;
+    font-weight:800;
 }
-
-
-.calorie-breakdown span {
-
-    display: block;
-
-    color: var(--muted);
 
-    font-size: 13px;
+.target{
+    color:var(--muted);
+    font-size:11px;
 }
 
+/* PROGRESS */
 
-.calorie-breakdown strong {
-
-    display: block;
-
-    font-size: 20px;
-
-    margin-top: 5px;
+.progress{
+    width:100%;
+    height:7px;
+    margin-top:11px;
+    overflow:hidden;
+    border-radius:20px;
+    background:#e2e8f0;
 }
-
-
-/* =========================================
-   TODAY'S NUTRITION
-========================================= */
 
-.summary-grid {
-
-    display: grid;
-
-    grid-template-columns: repeat(5, 1fr);
-
-    gap: 15px;
+.progress div{
+    width:0;
+    height:100%;
+    border-radius:20px;
+    background:linear-gradient(90deg,#16a34a,#4ade80);
+    transition:width .5s ease;
 }
-
-
-.summary-card {
-
-    background: white;
 
-    border: 1px solid var(--border);
+.progress.large{height:11px}
 
-    padding: 20px;
+/* FOOD */
 
-    border-radius: 16px;
-
-    box-shadow: var(--shadow);
-
-    min-width: 0;
+.food-form{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:11px;
 }
-
-
-.summary-icon {
-
-    font-size: 25px;
 
-    margin-bottom: 8px;
+.food-form button{
+    grid-column:span 4;
+    min-height:44px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+    color:#fff;
+    font-weight:700;
+    box-shadow:0 6px 15px rgba(22,163,74,.18);
 }
 
+/* MEALS */
 
-.summary-card h3 {
-
-    font-size: 14px;
-
-    color: var(--muted);
-
-    font-weight: normal;
-
-    margin-bottom: 3px;
+.meals-section{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
 }
-
 
-.summary-card strong {
-
-    font-size: 25px;
-
-    line-height: 1.3;
+.meal-card{
+    min-height:145px;
+    padding:19px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:#fff;
+    box-shadow:var(--shadow);
+    transition:.25s ease;
 }
-
-
-.target {
-
-    color: var(--muted);
 
-    font-size: 12px;
+.meal-card:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-hover);
 }
-
-
-/* =========================================
-   PROGRESS BARS
-========================================= */
-
-.progress {
-
-    height: 8px;
-
-    background: #e5e7eb;
 
-    border-radius: 20px;
-
-    overflow: hidden;
-
-    margin-top: 12px;
+.meal-card h2{
+    margin-bottom:13px;
+    font-size:17px;
+    font-weight:800;
 }
-
-
-.progress div {
-
-    height: 100%;
 
-    width: 0%;
-
-    background: var(--primary);
-
-    border-radius: 20px;
-
-    transition: width 0.4s ease;
+.meal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
 }
-
-
-.progress.large {
 
-    height: 12px;
+.food-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:8px;
+    padding:11px;
+    border:1px solid var(--border);
+    border-radius:11px;
+    background:#f8fafc;
 }
 
-
-/* =========================================
-   FOOD FORM
-========================================= */
-
-.food-form {
-
-    display: grid;
-
-    grid-template-columns: repeat(4, 1fr);
-
-    gap: 12px;
+.food-item strong{
+    display:block;
+    margin-bottom:2px;
+    font-size:13px;
 }
 
-
-.food-form button {
-
-    grid-column: span 4;
+.food-info{
+    color:var(--muted);
+    font-size:11px;
 }
-
-
-/* =========================================
-   MEALS
-========================================= */
-
-.meals-section {
-
-    display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
-
-    gap: 18px;
+.delete-food{
+    flex-shrink:0;
+    padding:6px 9px;
+    border-radius:8px;
+    background:var(--red-light);
+    color:#dc2626;
+    font-size:11px;
+    font-weight:700;
 }
-
-
-.meal-card {
-
-    background: white;
-
-    border: 1px solid var(--border);
 
-    border-radius: 16px;
-
-    padding: 20px;
-
-    min-height: 150px;
-
-    box-shadow: var(--shadow);
+.delete-food:hover{
+    background:#fecaca;
 }
-
-
-.meal-card h2 {
 
-    font-size: 17px;
+/* MICRONUTRIENTS */
 
-    margin-bottom: 15px;
+.micro-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
 }
-
-
-.food-item {
-
-    border: 1px solid var(--border);
-
-    padding: 12px;
-
-    border-radius: 10px;
-
-    margin-bottom: 8px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 12px;
 
-    background: #ffffff;
+.micro-card{
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:linear-gradient(145deg,#fff,#f8fafc);
 }
 
-
-.food-item strong {
-
-    display: block;
-
-    margin-bottom: 2px;
+.micro-card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:11px;
 }
-
-
-.food-info {
 
-    color: var(--muted);
-
-    font-size: 12px;
+.micro-card-header span{
+    font-size:13px;
+    font-weight:700;
 }
-
-
-.delete-food {
-
-    background: var(--danger-light);
-
-    color: var(--danger);
 
-    padding: 6px 9px;
-
-    flex-shrink: 0;
+.micro-card-header strong{
+    font-size:13px;
 }
-
 
-.delete-food:hover {
-
-    background: #fecaca;
-
+.micro-input-row{
+    display:flex;
+    align-items:center;
+    gap:7px;
 }
-
 
-/* =========================================
-   MICRONUTRIENTS
-========================================= */
-
-.micro-grid {
-
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 12px;
+.micro-input-row input{
+    padding:9px 10px;
 }
-
-
-.micro-item {
 
-    background: #f9fafb;
-
-    border: 1px solid var(--border);
-
-    border-radius: 12px;
-
-    padding: 15px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 10px;
+.micro-input-row span{
+    color:var(--muted);
+    font-size:11px;
 }
-
-
-.micro-item span {
-
-    color: var(--muted);
 
-    font-size: 14px;
+.micro-target{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:9px;
+    font-size:11px;
 }
 
+.micro-target span{color:var(--muted)}
 
-.micro-item strong {
+.micro-target strong{font-size:11px}
 
-    font-size: 14px;
-
-    white-space: nowrap;
+.micro-card .progress{
+    height:5px;
+    margin-top:8px;
 }
-
 
-/* =========================================
-   WATER
-========================================= */
+/* WATER */
 
-.water-box {
-
-    max-width: 700px;
+.water-box{
+    max-width:760px;
 }
-
-
-.water-number {
 
-    display: flex;
-
-    align-items: baseline;
-
-    gap: 8px;
+.water-number{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
 }
-
 
-.water-number strong {
-
-    font-size: 40px;
-
-    line-height: 1;
+.water-number strong{
+    font-size:42px;
+    font-weight:800;
+    line-height:1;
 }
-
 
-.water-number span {
-
-    color: var(--muted);
-
-    font-size: 14px;
+.water-number span{
+    color:var(--muted);
+    font-size:13px;
 }
-
-
-.water-buttons {
-
-    display: flex;
 
-    gap: 10px;
-
-    margin-top: 15px;
-
-    flex-wrap: wrap;
+.water-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-top:15px;
 }
 
-
-.water-buttons button:last-child {
-
-    background: #6b7280;
+.water-buttons button{
+    padding:10px 14px;
+    border-radius:10px;
+    background:linear-gradient(135deg,#0284c7,#0ea5e9);
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
 }
-
 
-.water-buttons button:last-child:hover {
-
-    background: #4b5563;
+.water-buttons button:last-child{
+    background:#64748b;
 }
-
-
-/* =========================================
-   WEIGHT
-========================================= */
-
-.weight-form {
-
-    display: grid;
 
-    grid-template-columns: 1fr 1fr auto;
-
-    gap: 12px;
+.water-buttons button:last-child:hover{
+    background:#475569;
 }
-
-
-.weight-summary {
 
-    display: grid;
+/* WEIGHT */
 
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 15px;
-
-    margin-top: 20px;
+.weight-form{
+    display:grid;
+    grid-template-columns:1fr 1fr auto;
+    gap:11px;
 }
 
+.weight-summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+    margin-top:18px;
+}
 
 .weight-summary div,
 .goal-box div,
-.report-grid div {
-
-    background: #f9fafb;
-
-    border: 1px solid var(--border);
-
-    border-radius: 12px;
-
-    padding: 16px;
+.report-grid div{
+    padding:15px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:#f8fafc;
 }
-
 
 .weight-summary span,
 .goal-box span,
-.report-grid span {
-
-    display: block;
-
-    color: var(--muted);
-
-    font-size: 13px;
+.report-grid span{
+    display:block;
+    color:var(--muted);
+    font-size:12px;
 }
-
 
 .weight-summary strong,
 .goal-box strong,
-.report-grid strong {
-
-    display: block;
-
-    font-size: 22px;
-
-    margin-top: 5px;
+.report-grid strong{
+    display:block;
+    margin-top:4px;
+    font-size:21px;
 }
 
-
-.weight-history {
-
-    margin-top: 25px;
+.weight-history{
+    margin-top:22px;
 }
 
-
-.weight-history h3 {
-
-    font-size: 17px;
-
-    margin-bottom: 10px;
+.weight-history h3{
+    margin-bottom:9px;
+    font-size:16px;
 }
 
-
-.weight-row {
-
-    display: grid;
-
-    grid-template-columns: 1fr 1fr 1fr auto;
-
-    gap: 10px;
-
-    padding: 10px;
-
-    border-bottom: 1px solid var(--border);
-
-    font-size: 14px;
-
-    align-items: center;
+.weight-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr auto;
+    gap:10px;
+    align-items:center;
+    padding:10px;
+    border-bottom:1px solid var(--border);
+    font-size:12px;
 }
 
+/* ACTIVITY */
 
-/* =========================================
-   ACTIVITY
-========================================= */
-
-.activity-grid {
-
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 15px;
-
-    margin-bottom: 15px;
+.activity-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+    margin-bottom:14px;
 }
 
+.activity-grid input{margin-top:0}
 
-.activity-grid label {
+/* GOAL */
 
-    display: block;
-
-    margin-bottom: 7px;
-
-    color: var(--muted);
-
-    font-size: 14px;
+.goal-box{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+    margin-bottom:16px;
 }
 
+/* REPORT */
 
-/* =========================================
-   GOALS
-========================================= */
-
-.goal-box {
-
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 15px;
-
-    margin-bottom: 18px;
+.report-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
 }
 
-
-/* =========================================
-   DAILY REPORT
-========================================= */
-
-.report-grid {
-
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 15px;
+.report-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-top:17px;
 }
 
-
-/* =========================================
-   RESET
-========================================= */
-
-.danger-zone {
-
-    text-align: center;
-
-    margin-top: 30px;
+.report-actions button{
+    padding:10px 15px;
+    border-radius:10px;
+    color:#fff;
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+    font-size:12px;
+    font-weight:700;
 }
 
-
-.danger-zone button {
-
-    background: var(--danger);
+.report-actions button:nth-child(2){
+    background:linear-gradient(135deg,#7c3aed,#8b5cf6);
 }
 
-
-.danger-zone button:hover {
-
-    background: #b91c1c;
+.report-actions button:nth-child(3){
+    background:linear-gradient(135deg,#0f766e,#14b8a6);
 }
 
+/* WEEKLY GRAPH */
 
-/* =========================================
-   FOOTER
-========================================= */
-
-footer {
-
-    text-align: center;
-
-    color: var(--muted);
-
-    padding: 30px 15px;
-
-    font-size: 13px;
+.weekly-chart{
+    width:100%;
+    min-height:280px;
+    padding:15px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:#fff;
 }
 
-
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 1100px) {
-
-    .summary-grid {
-
-        grid-template-columns: repeat(3, 1fr);
-
-    }
-
-    .health-analysis-grid {
-
-        grid-template-columns: repeat(3, 1fr);
-
-    }
-
-    .food-form {
-
-        grid-template-columns: repeat(3, 1fr);
-
-    }
-
-    .food-form button {
-
-        grid-column: span 3;
-
-    }
-
+.chart-container{
+    position:relative;
+    width:100%;
+    height:280px;
 }
 
+/* HISTORY */
 
-/* =========================================
-   TABLET / SMALL LAPTOP
-========================================= */
-
-@media (max-width: 900px) {
-
-    .summary-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-
-    }
-
-
-    .profile-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-
-    }
-
-
-    .health-analysis-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .food-form {
-
-        grid-template-columns: repeat(2, 1fr);
-
-    }
-
-
-    .food-form button {
-
-        grid-column: span 2;
-
-    }
-
-
-    .micro-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-
-    }
-
-
-    .activity-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .report-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-
-    }
-
-
-    .calorie-breakdown {
-
-        grid-template-columns: 1fr;
-
-    }
-
+.history-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:9px;
 }
 
+.history-day{
+    padding:12px 8px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:#f8fafc;
+    text-align:center;
+}
 
-/* =========================================
-   MOBILE
-========================================= */
+.history-day strong{
+    display:block;
+    font-size:12px;
+}
 
-@media (max-width: 600px) {
+.history-day span{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:10px;
+}
 
-    .topbar {
+/* PRINT */
 
-        padding: 15px;
+.print-button{
+    background:linear-gradient(135deg,#475569,#64748b);
+    color:#fff;
+}
 
+.print-button:hover{
+    background:linear-gradient(135deg,#334155,#475569);
+}
+
+/* DANGER */
+
+.danger-zone{
+    margin-top:25px;
+    text-align:center;
+}
+
+.danger-zone button{
+    padding:10px 18px;
+    border-radius:10px;
+    background:#dc2626;
+    color:#fff;
+    font-weight:700;
+}
+
+.danger-zone button:hover{background:#b91c1c}
+
+/* FOOTER */
+
+footer{
+    padding:30px 15px;
+    color:var(--muted);
+    text-align:center;
+    font-size:12px;
+}
+
+/* TABLET */
+
+@media(max-width:1100px){
+    .summary-grid{grid-template-columns:repeat(3,1fr)}
+    .food-form{grid-template-columns:repeat(3,1fr)}
+    .food-form button{grid-column:span 3}
+    .micro-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:900px){
+    .profile-grid{grid-template-columns:repeat(2,1fr)}
+    .health-analysis-grid{grid-template-columns:1fr}
+    .summary-grid{grid-template-columns:repeat(2,1fr)}
+    .food-form{grid-template-columns:repeat(2,1fr)}
+    .food-form button{grid-column:span 2}
+    .micro-grid{grid-template-columns:repeat(2,1fr)}
+    .calorie-breakdown{grid-template-columns:1fr}
+    .activity-grid{grid-template-columns:1fr}
+    .report-grid{grid-template-columns:repeat(2,1fr)}
+    .history-grid{grid-template-columns:repeat(4,1fr)}
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+    .topbar{
+        padding:12px 15px;
+        min-height:65px;
     }
 
-
-    .container {
-
-        width: 94%;
-
-        margin-top: 20px;
-
+    .brand-icon{
+        width:40px;
+        height:40px;
+        font-size:22px;
+        border-radius:12px;
     }
 
+    .brand h1{font-size:20px}
+    .brand p{font-size:10px}
+    .date-box{display:none}
 
-    .brand-icon {
-
-        font-size: 30px;
-
+    .container{
+        width:94%;
+        margin-top:18px;
     }
 
-
-    .brand h1 {
-
-        font-size: 21px;
-
+    .card,.profile-card{
+        padding:17px;
+        border-radius:16px;
     }
 
+    .section-title{margin-bottom:15px}
+    .section-title h2{font-size:18px}
+    .section-title p{font-size:11px}
 
-    .brand p {
-
-        font-size: 11px;
-
-    }
-
-
-    .date-box {
-
-        display: none;
-
-    }
-
-
-    .profile-card,
-    .card {
-
-        padding: 18px;
-
-        border-radius: 15px;
-
-    }
-
-
-    .section-title h2 {
-
-        font-size: 19px;
-
-    }
-
-
-    .section-title p {
-
-        font-size: 12px;
-
-    }
-
-
+    .profile-grid,
     .summary-grid,
     .meals-section,
-    .profile-grid,
     .micro-grid,
     .weight-summary,
     .goal-box,
-    .report-grid {
-
-        grid-template-columns: 1fr;
-
+    .report-grid,
+    .food-form{
+        grid-template-columns:1fr;
     }
 
+    .food-form button{grid-column:span 1}
 
-    .food-form {
-
-        grid-template-columns: 1fr;
-
+    .activity-calculator{
+        grid-template-columns:1fr;
     }
 
+    .activity-calculator button{width:100%}
 
-    .food-form button {
+    .calorie-breakdown{grid-template-columns:1fr}
 
-        grid-column: span 1;
-
+    .weight-form{
+        grid-template-columns:1fr;
     }
 
-
-    .weight-form {
-
-        grid-template-columns: 1fr;
-
+    .history-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
-
-    .activity-calculator {
-
-        grid-template-columns: 1fr;
-
+    .food-item{
+        align-items:flex-start;
     }
 
-
-    .activity-calculator button {
-
-        width: 100%;
-
+    .weight-row{
+        grid-template-columns:1fr 1fr;
     }
 
+    .water-number strong{font-size:36px}
 
-    .calorie-breakdown {
-
-        grid-template-columns: 1fr;
-
+    .report-actions button{
+        width:100%;
     }
 
-
-    .water-number strong {
-
-        font-size: 34px;
-
+    .micro-input-row{
+        align-items:stretch;
     }
-
-
-    .food-item {
-
-        align-items: flex-start;
-
-    }
-
-
-    .weight-row {
-
-        grid-template-columns: 1fr 1fr;
-
-        gap: 8px;
-
-    }
-
-
-    .analysis-card strong {
-
-        font-size: 27px;
-
-    }
-
 }
+
+@media print{
+    .topbar{
+        position:static;
+        box-shadow:none;
+    }
+
+    button,
+    .water-buttons,
+    .report-actions,
+    .danger-zone{
+        display:none!important;
+    }
+
+    body{
+        background:#fff;
+    }
+
+    .card,.profile-card,.summary-card,.meal-card{
+        box-shadow:none;
+        break-inside:avoid;
+    }
+
+    .container{
+        width:96%;
+        max-width:none;
+        margin:10px auto;
+    }
+}
+
+/* CSS PART 1 ENDS HERE */
+/* CSS PART 2 */
+
+/* HISTORY */
+
+.history-section{
+    margin-top:20px;
+}
+
+.history-controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-bottom:16px;
+}
+
+.history-controls select,
+.history-controls input{
+    max-width:220px;
+}
+
+.history-card{
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:#fff;
+    box-shadow:var(--shadow);
+    margin-bottom:12px;
+}
+
+.history-card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding-bottom:12px;
+    border-bottom:1px solid var(--border);
+}
+
+.history-card-header h3{
+    font-size:16px;
+}
+
+.history-card-header span{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.history-stat-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:13px;
+}
+
+.history-stat{
+    padding:12px;
+    border-radius:11px;
+    background:#f8fafc;
+    border:1px solid var(--border);
+}
+
+.history-stat span{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.history-stat strong{
+    display:block;
+    margin-top:3px;
+    font-size:17px;
+}
+
+/* DATE SELECTOR */
+
+.date-selector{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.date-selector label{
+    color:var(--muted);
+    font-size:12px;
+    font-weight:600;
+}
+
+.date-selector input{
+    max-width:180px;
+}
+
+/* DAILY REPORT */
+
+.daily-report{
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:#fff;
+    box-shadow:var(--shadow);
+}
+
+.daily-report-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:17px;
+}
+
+.daily-report-title h3{
+    font-size:18px;
+}
+
+.daily-report-title span{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.report-grid.four{
+    grid-template-columns:repeat(4,1fr);
+}
+
+.report-card{
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:#f8fafc;
+}
+
+.report-card span{
+    display:block;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.report-card strong{
+    display:block;
+    margin-top:4px;
+    font-size:22px;
+}
+
+/* DEFICIT */
+
+.deficit-card{
+    margin-top:15px;
+    padding:17px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#ecfdf5,#f0fdf4);
+    border:1px solid #bbf7d0;
+}
+
+.deficit-card h3{
+    font-size:15px;
+}
+
+.deficit-value{
+    margin-top:4px;
+    font-size:26px;
+    font-weight:800;
+    color:var(--primary-dark);
+}
+
+.deficit-positive{
+    color:#16a34a;
+}
+
+.deficit-negative{
+    color:#dc2626;
+}
+
+/* WEEKLY REPORT */
+
+.weekly-report{
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:#fff;
+    box-shadow:var(--shadow);
+}
+
+.weekly-report-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.weekly-report-header h3{
+    font-size:19px;
+}
+
+.weekly-report-header p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:2px;
+}
+
+.weekly-summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.weekly-summary-card{
+    padding:15px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:#f8fafc;
+}
+
+.weekly-summary-card span{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.weekly-summary-card strong{
+    display:block;
+    margin-top:4px;
+    font-size:21px;
+}
+
+/* GRAPH */
+
+.graph-card{
+    margin-top:18px;
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:#fff;
+}
+
+.graph-card h3{
+    margin-bottom:13px;
+    font-size:16px;
+}
+
+.graph-wrapper{
+    position:relative;
+    width:100%;
+    height:300px;
+    overflow:hidden;
+}
+
+.graph-wrapper canvas{
+    width:100%;
+    height:100%;
+}
+
+/* EXERCISE */
+
+.exercise-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.exercise-form{
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:#fff;
+}
+
+.exercise-form h3{
+    margin-bottom:13px;
+    font-size:16px;
+}
+
+.exercise-form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.exercise-form button{
+    width:100%;
+    min-height:43px;
+    border-radius:11px;
+    background:linear-gradient(135deg,#7c3aed,#8b5cf6);
+    color:#fff;
+    font-weight:700;
+}
+
+.exercise-list{
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:#fff;
+}
+
+.exercise-list h3{
+    margin-bottom:12px;
+    font-size:16px;
+}
+
+.exercise-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:11px 12px;
+    margin-bottom:8px;
+    border:1px solid var(--border);
+    border-radius:11px;
+    background:#f8fafc;
+}
+
+.exercise-item-main strong{
+    display:block;
+    font-size:13px;
+}
+
+.exercise-item-main span{
+    display:block;
+    margin-top:2px;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.exercise-delete{
+    padding:6px 9px;
+    border-radius:8px;
+    background:var(--red-light);
+    color:var(--red);
+    font-size:11px;
+    font-weight:700;
+}
+
+/* EXERCISE DAY TABS */
+
+.exercise-days{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-bottom:15px;
+}
+
+.exercise-day{
+    padding:8px 12px;
+    border-radius:9px;
+    background:#f1f5f9;
+    color:#475569;
+    font-size:11px;
+    font-weight:700;
+}
+
+.exercise-day.active{
+    background:var(--purple);
+    color:#fff;
+}
+
+/* WATER HISTORY */
+
+.water-history{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:8px;
+    margin-top:18px;
+}
+
+.water-history-day{
+    padding:11px 6px;
+    text-align:center;
+    border:1px solid var(--border);
+    border-radius:11px;
+    background:#f8fafc;
+}
+
+.water-history-day strong{
+    display:block;
+    font-size:11px;
+}
+
+.water-history-day span{
+    display:block;
+    margin-top:3px;
+    color:#0284c7;
+    font-size:10px;
+    font-weight:700;
+}
+
+/* WEIGHT CHART */
+
+.weight-chart-card{
+    margin-top:18px;
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:#fff;
+}
+
+.weight-chart-card h3{
+    margin-bottom:13px;
+    font-size:16px;
+}
+
+/* MICRO NUTRIENT EXTRA */
+
+.micro-total{
+    margin-top:15px;
+    padding:14px;
+    border-radius:13px;
+    background:var(--primary-light);
+    border:1px solid #bbf7d0;
+}
+
+.micro-total p{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.micro-total strong{
+    display:block;
+    margin-top:3px;
+    font-size:18px;
+}
+
+/* PROFILE POPUP */
+
+.toast{
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    z-index:9999;
+    max-width:340px;
+    padding:13px 17px;
+    border-radius:12px;
+    background:#17201a;
+    color:#fff;
+    box-shadow:0 12px 30px rgba(0,0,0,.18);
+    font-size:13px;
+    opacity:0;
+    transform:translateY(15px);
+    pointer-events:none;
+    transition:.3s ease;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* MODAL */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(15,23,42,.55);
+    backdrop-filter:blur(5px);
+}
+
+.modal-overlay.show{
+    display:flex;
+}
+
+.modal{
+    width:100%;
+    max-width:560px;
+    max-height:90vh;
+    overflow:auto;
+    padding:23px;
+    border-radius:20px;
+    background:#fff;
+    box-shadow:0 25px 70px rgba(0,0,0,.22);
+}
+
+.modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:17px;
+}
+
+.modal-header h2{
+    font-size:19px;
+}
+
+.modal-close{
+    width:35px;
+    height:35px;
+    display:grid;
+    place-items:center;
+    border-radius:9px;
+    background:#f1f5f9;
+    color:#475569;
+    font-size:18px;
+}
+
+.modal-close:hover{
+    background:#e2e8f0;
+}
+
+/* EMPTY STATE */
+
+.empty-state{
+    padding:25px 15px;
+    text-align:center;
+    color:var(--muted);
+}
+
+.empty-state-icon{
+    margin-bottom:7px;
+    font-size:30px;
+}
+
+.empty-state strong{
+    display:block;
+    color:#475569;
+    font-size:14px;
+}
+
+.empty-state p{
+    margin-top:3px;
+    font-size:11px;
+}
+
+/* BADGES */
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    padding:4px 8px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.badge-green{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.badge-blue{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.badge-purple{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.badge-orange{
+    background:#ffedd5;
+    color:#c2410c;
+}
+
+/* SAVE BUTTON */
+
+.save-button{
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+    color:#fff;
+    box-shadow:0 6px 16px rgba(22,163,74,.18);
+}
+
+.save-button:hover{
+    background:linear-gradient(135deg,#15803d,#16a34a);
+}
+
+/* SECONDARY BUTTON */
+
+.secondary-button{
+    background:#f1f5f9;
+    color:#334155;
+    border:1px solid var(--border);
+}
+
+.secondary-button:hover{
+    background:#e2e8f0;
+}
+
+/* EXPORT BUTTON */
+
+.export-button{
+    background:linear-gradient(135deg,#0f766e,#14b8a6);
+    color:#fff;
+}
+
+/* RESPONSIVE EXTRA */
+
+@media(max-width:900px){
+    .history-stat-grid,
+    .weekly-summary,
+    .report-grid.four{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .exercise-grid{
+        grid-template-columns:1fr;
+    }
+
+    .water-history{
+        grid-template-columns:repeat(4,1fr);
+    }
+}
+
+@media(max-width:600px){
+    .history-controls{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .history-controls select,
+    .history-controls input{
+        max-width:none;
+    }
+
+    .history-stat-grid,
+    .weekly-summary,
+    .report-grid.four{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .exercise-form-row{
+        grid-template-columns:1fr;
+    }
+
+    .water-history{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .weekly-report-header,
+    .daily-report-title{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .toast{
+        left:15px;
+        right:15px;
+        bottom:15px;
+        max-width:none;
+    }
+
+    .modal{
+        padding:18px;
+        border-radius:16px;
+    }
+}
+
+/* PRINT REPORT */
+
+@media print{
+    @page{
+        size:A4;
+        margin:12mm;
+    }
+
+    body{
+        color:#000;
+        background:#fff!important;
+    }
+
+    .topbar{
+        border-bottom:1px solid #ccc;
+    }
+
+    .card,
+    .profile-card,
+    .daily-report,
+    .weekly-report,
+    .graph-card,
+    .weight-chart-card,
+    .meal-card{
+        border:1px solid #ccc!important;
+        box-shadow:none!important;
+        background:#fff!important;
+    }
+
+    .no-print,
+    .print-button,
+    .report-actions,
+    .water-buttons,
+    .danger-zone,
+    .delete-food,
+    .exercise-delete,
+    .modal-overlay,
+    .toast{
+        display:none!important;
+    }
+
+    .weekly-report,
+    .daily-report{
+        display:block!important;
+        break-inside:avoid;
+    }
+
+    .summary-card,
+    .report-card,
+    .history-card{
+        break-inside:avoid;
+    }
+
+    .container{
+        width:100%;
+        max-width:none;
+        margin:0;
+    }
+
+    .section-title{
+        margin-bottom:12px;
+    }
+}
+
+/* ACCESSIBILITY */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible{
+    outline:3px solid rgba(37,99,235,.20);
+    outline-offset:2px;
+}
+
+/* SMOOTH UI */
+
+.card,
+.profile-card,
+.summary-card,
+.meal-card,
+.analysis-card,
+.micro-card,
+.history-card,
+.weekly-report,
+.daily-report{
+    -webkit-tap-highlight-color:transparent;
+}
+
+/* CSS PART 2 ENDS HERE */

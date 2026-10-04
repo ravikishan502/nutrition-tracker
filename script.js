@@ -1,2065 +1,1078 @@
-/* =========================================
+/* =====================================================
    NUTRITRACK - SCRIPT.JS
    PART 1
-========================================= */
+   Date-wise data + Profile + Food + Water + Micros
+===================================================== */
 
-let appData = JSON.parse(
-    localStorage.getItem("nutriTrackData")
-) || {
-    profile: {
-        name: "",
-        age: "",
-        gender: "",
-        height: "",
-        currentWeight: "",
-        targetWeight: "",
-        goal: "loss",
-        activityLevel: 1.2
-    },
-
-    foods: [],
-
-    water: 0,
-
-    weights: [],
-
-    activity: {
-        steps: 0,
-        walking: 0,
-        workout: 0
-    }
+const defaultData={
+ profile:{name:"",age:0,gender:"",height:0,currentWeight:0,targetWeight:0,goal:"loss",activityLevel:1.2},
+ days:{},
+ weights:[],
+ startingWeight:0
 };
 
+let appData;
+try{
+ appData=JSON.parse(localStorage.getItem("nutriTrackData"))||defaultData;
+}catch(e){appData=defaultData;}
 
-/* =========================================
-   OLD DATA MIGRATION
-========================================= */
+if(!appData.profile)appData.profile={...defaultData.profile};
+if(!appData.days)appData.days={};
+if(!Array.isArray(appData.weights))appData.weights=[];
+if(!appData.startingWeight)appData.startingWeight=Number(localStorage.getItem("nutriStartingWeight"))||0;
 
-if (!appData.profile) {
-    appData.profile = {
-        name: "",
-        age: "",
-        gender: "",
-        height: "",
-        currentWeight: "",
-        targetWeight: "",
-        goal: "loss",
-        activityLevel: 1.2
-    };
+let selectedDate=getDateKey(new Date());
+
+/* ---------- DATE ---------- */
+
+function getDateKey(date){
+ const d=date instanceof Date?date:new Date(date);
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
 
-if (appData.profile.gender === undefined) {
-    appData.profile.gender = "";
+function formatDate(key){
+ if(!key)return"";
+ const p=key.split("-");
+ if(p.length!==3)return key;
+ return new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
 }
 
-if (appData.profile.currentWeight === undefined) {
-    appData.profile.currentWeight = "";
+function changeDate(value){
+ if(!value)return;
+ selectedDate=value;
+ getDay(selectedDate);
+ saveData();
+ refresh();
 }
 
-if (appData.profile.activityLevel === undefined) {
-    appData.profile.activityLevel = 1.2;
+function previousDay(){
+ const d=new Date(selectedDate+"T00:00:00");
+ d.setDate(d.getDate()-1);
+ changeDate(getDateKey(d));
 }
 
-if (!Array.isArray(appData.foods)) {
-    appData.foods = [];
+function nextDay(){
+ const d=new Date(selectedDate+"T00:00:00");
+ d.setDate(d.getDate()+1);
+ changeDate(getDateKey(d));
 }
 
-if (!Array.isArray(appData.weights)) {
-    appData.weights = [];
+function goToToday(){
+ changeDate(getDateKey(new Date()));
 }
 
-if (!appData.activity) {
-    appData.activity = {
-        steps: 0,
-        walking: 0,
-        workout: 0
-    };
+function updateDate(){
+ const e=document.getElementById("currentDate");
+ if(e)e.textContent=formatDate(selectedDate);
+ const picker=document.getElementById("datePicker");
+ if(picker)picker.value=selectedDate;
 }
 
+/* ---------- DAILY DATA ---------- */
 
-/* =========================================
-   SAVE DATA
-========================================= */
-
-function saveData() {
-
-    localStorage.setItem(
-        "nutriTrackData",
-        JSON.stringify(appData)
-    );
+function emptyDay(){
+ return{
+  foods:[],
+  water:0,
+  micronutrients:{
+   calcium:0,magnesium:0,iron:0,sodium:0,potassium:0,
+   zinc:0,vitaminC:0,vitaminD:0,omega3:0
+  },
+  activity:{steps:0,walking:0,workout:0},
+  exercises:[],
+  notes:"",
+  savedAt:""
+ };
 }
 
-
-/* =========================================
-   DATE
-========================================= */
-
-function updateDate() {
-
-    const date = new Date();
-
-    const dateElement =
-        document.getElementById("currentDate");
-
-    if (!dateElement) return;
-
-    dateElement.textContent =
-        date.toLocaleDateString("en-IN", {
-            weekday: "short",
-            day: "numeric",
-            month: "short",
-            year: "numeric"
-        });
+function getDay(key=selectedDate){
+ if(!appData.days[key])appData.days[key]=emptyDay();
+ const d=appData.days[key];
+ if(!Array.isArray(d.foods))d.foods=[];
+ if(!d.micronutrients)d.micronutrients=emptyDay().micronutrients;
+ if(!d.activity)d.activity=emptyDay().activity;
+ if(!Array.isArray(d.exercises))d.exercises=[];
+ return d;
 }
 
-
-/* =========================================
-   PROFILE
-========================================= */
-
-function loadProfile() {
-
-    const profile = appData.profile;
-
-    document.getElementById("userName").value =
-        profile.name || "";
-
-    document.getElementById("age").value =
-        profile.age || "";
-
-    document.getElementById("gender").value =
-        profile.gender || "";
-
-    document.getElementById("height").value =
-        profile.height || "";
-
-    document.getElementById("currentWeight").value =
-        profile.currentWeight || "";
-
-    document.getElementById("weightGoal").value =
-        profile.targetWeight || "";
-
-    document.getElementById("goal").value =
-        profile.goal || "loss";
-
-    const activityLevel =
-        document.getElementById("activityLevel");
-
-    if (activityLevel) {
-
-        activityLevel.value =
-            String(
-                profile.activityLevel || 1.2
-            );
-    }
-
-    const calculatorActivity =
-        document.getElementById(
-            "calculatorActivity"
-        );
-
-    if (calculatorActivity) {
-
-        calculatorActivity.value =
-            String(
-                profile.activityLevel || 1.2
-            );
-    }
-
-    calculateHealthMetrics();
+function saveData(){
+ localStorage.setItem("nutriTrackData",JSON.stringify(appData));
 }
 
+/* ---------- OLD DATA MIGRATION ---------- */
 
-/* =========================================
-   SAVE PROFILE
-========================================= */
+if(Array.isArray(appData.foods)&&appData.foods.length){
+ getDay(getDateKey(new Date())).foods=appData.foods;
+ delete appData.foods;
+}
+if(typeof appData.water==="number"){
+ getDay(getDateKey(new Date())).water=appData.water;
+ delete appData.water;
+}
+if(appData.activity){
+ getDay(getDateKey(new Date())).activity=appData.activity;
+ delete appData.activity;
+}
+saveData();
 
-function saveProfile() {
+/* ---------- MESSAGE ---------- */
 
-    const userName =
-        document.getElementById("userName");
-
-    const age =
-        document.getElementById("age");
-
-    const gender =
-        document.getElementById("gender");
-
-    const height =
-        document.getElementById("height");
-
-    const currentWeight =
-        document.getElementById("currentWeight");
-
-    const weightGoal =
-        document.getElementById("weightGoal");
-
-    const goal =
-        document.getElementById("goal");
-
-    appData.profile.name =
-        userName ? userName.value.trim() : "";
-
-    appData.profile.age =
-        age ? Number(age.value) || 0 : 0;
-
-    appData.profile.gender =
-        gender
-            ? gender.value.toLowerCase()
-            : "";
-
-    appData.profile.height =
-        height ? Number(height.value) || 0 : 0;
-
-    appData.profile.currentWeight =
-        currentWeight
-            ? Number(currentWeight.value) || 0
-            : 0;
-
-    appData.profile.targetWeight =
-        weightGoal
-            ? Number(weightGoal.value) || 0
-            : 0;
-
-    appData.profile.goal =
-        goal ? goal.value : "loss";
-
-
-    /* Activity Level */
-    const activityLevel =
-        document.getElementById(
-            "activityLevel"
-        );
-
-    if (activityLevel) {
-
-        appData.profile.activityLevel =
-            Number(activityLevel.value) || 1.2;
-
-    } else {
-
-        appData.profile.activityLevel = 1.2;
-    }
-
-
-    /* Starting Weight */
-    if (
-        appData.profile.currentWeight > 0 &&
-        !localStorage.getItem(
-            "nutriStartingWeight"
-        )
-    ) {
-
-        localStorage.setItem(
-            "nutriStartingWeight",
-            appData.profile.currentWeight
-        );
-    }
-
-
-    /* Save */
-    saveData();
-
-
-    /* Update everything */
-    calculateHealthMetrics();
-
-    updateGoal();
-
-    updateNutrition();
-
-
-    alert(
-        "Profile saved successfully!"
-    );
+function showMessage(msg){
+ const toast=document.getElementById("toast");
+ if(toast){
+  toast.textContent=msg;
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"),2200);
+ }else{
+  alert(msg);
+ }
 }
 
+/* ---------- PROFILE ---------- */
 
-
-
-/* =========================================
-   BMI
-========================================= */
-
-function calculateBMI(
-    height,
-    weight
-) {
-
-    if (
-        !height ||
-        !weight ||
-        height <= 0 ||
-        weight <= 0
-    ) {
-
-        return null;
-    }
-
-    const heightInMeters =
-        height / 100;
-
-    return (
-        weight /
-        (
-            heightInMeters *
-            heightInMeters
-        )
-    );
+function loadProfile(){
+ const p=appData.profile;
+ const set=(id,value)=>{
+  const e=document.getElementById(id);
+  if(e)e.value=value??"";
+ };
+ set("userName",p.name);
+ set("age",p.age);
+ set("gender",p.gender);
+ set("height",p.height);
+ set("currentWeight",p.currentWeight);
+ set("weightGoal",p.targetWeight);
+ set("goal",p.goal||"loss");
+ set("activityLevel",p.activityLevel||1.2);
+ set("calculatorActivity",p.activityLevel||1.2);
 }
 
+function saveProfile(){
+ const val=id=>document.getElementById(id)?.value;
+ appData.profile.name=(val("userName")||"").trim();
+ appData.profile.age=Number(val("age"))||0;
+ appData.profile.gender=(val("gender")||"").toLowerCase();
+ appData.profile.height=Number(val("height"))||0;
+ appData.profile.currentWeight=Number(val("currentWeight"))||0;
+ appData.profile.targetWeight=Number(val("weightGoal"))||0;
+ appData.profile.goal=val("goal")||"loss";
+ appData.profile.activityLevel=Number(val("activityLevel"))||1.2;
 
-/* =========================================
-   BMI CATEGORY
-========================================= */
-
-function getBMICategory(bmi) {
-
-    if (bmi === null) {
-
-        return "Enter height and weight";
-    }
-
-    if (bmi < 18.5) {
-
-        return "Underweight";
-    }
-
-    if (bmi < 25) {
-
-        return "Normal range";
-    }
-
-    if (bmi < 30) {
-
-        return "Overweight";
-    }
-
-    return "Obesity range";
+ if(appData.profile.currentWeight>0&&!appData.startingWeight){
+  appData.startingWeight=appData.profile.currentWeight;
+  localStorage.setItem("nutriStartingWeight",appData.startingWeight);
+ }
+ saveData();
+ calculateHealthMetrics();
+ updateNutrition();
+ updateGoal();
+ showMessage("Profile saved successfully!");
 }
 
+/* ---------- BMI / BMR / TDEE ---------- */
 
-/* =========================================
-   BMR
-   Mifflin-St Jeor Equation
-========================================= */
-
-function calculateBMR(
-    age,
-    height,
-    weight,
-    gender
-) {
-
-    if (
-        !age ||
-        !height ||
-        !weight ||
-        !gender
-    ) {
-
-        return null;
-    }
-
-    if (
-        age <= 0 ||
-        height <= 0 ||
-        weight <= 0
-    ) {
-
-        return null;
-    }
-
-
-    let bmr;
-
-
-    if (gender === "male") {
-
-        bmr =
-            (10 * weight) +
-            (6.25 * height) -
-            (5 * age) +
-            5;
-
-    }
-
-    else if (gender === "female") {
-
-        bmr =
-            (10 * weight) +
-            (6.25 * height) -
-            (5 * age) -
-            161;
-
-    }
-
-    else {
-
-        return null;
-    }
-
-
-    return bmr;
+function calculateBMI(h,w){
+ if(!h||!w||h<=0||w<=0)return null;
+ h=h/100;
+ return w/(h*h);
 }
 
-
-/* =========================================
-   BMI + BMR + TDEE
-========================================= */
-
-function calculateHealthMetrics() {
-
-    const age =
-        Number(
-            document.getElementById(
-                "age"
-            ).value
-        );
-
-    const height =
-        Number(
-            document.getElementById(
-                "height"
-            ).value
-        );
-
-    const weight =
-        Number(
-            document.getElementById(
-                "currentWeight"
-            ).value
-        );
-
-    const gender =
-        document.getElementById(
-            "gender"
-        ).value;
-
-
-    const calculatorActivity =
-        document.getElementById(
-            "calculatorActivity"
-        );
-
-    const activity =
-        calculatorActivity
-            ? Number(
-                calculatorActivity.value
-              )
-            : 1.2;
-
-
-    /* BMI */
-
-    const bmi =
-        calculateBMI(
-            height,
-            weight
-        );
-
-
-    const bmiValue =
-        document.getElementById(
-            "bmiValue"
-        );
-
-    const bmiCategory =
-        document.getElementById(
-            "bmiCategory"
-        );
-
-
-    if (bmi !== null) {
-
-        bmiValue.textContent =
-            bmi.toFixed(1);
-
-        bmiCategory.textContent =
-            getBMICategory(bmi);
-
-    }
-
-    else {
-
-        bmiValue.textContent =
-            "--";
-
-        bmiCategory.textContent =
-            "Enter height and weight";
-    }
-
-
-    /* BMR */
-
-    const bmr =
-        calculateBMR(
-            age,
-            height,
-            weight,
-            gender
-        );
-
-
-    const bmrValue =
-        document.getElementById(
-            "bmrValue"
-        );
-
-    const calculatorBMR =
-        document.getElementById(
-            "calculatorBMR"
-        );
-
-
-    if (bmr !== null) {
-
-        const roundedBMR =
-            Math.round(bmr);
-
-        bmrValue.textContent =
-            roundedBMR;
-
-        calculatorBMR.textContent =
-            roundedBMR +
-            " kcal";
-
-    }
-
-    else {
-
-        bmrValue.textContent =
-            "--";
-
-        calculatorBMR.textContent =
-            "-- kcal";
-    }
-
-
-    /* TDEE */
-
-    const tdeeValue =
-        document.getElementById(
-            "tdeeValue"
-        );
-
-    const calculatorTDEE =
-        document.getElementById(
-            "calculatorTDEE"
-        );
-
-    const activityMultiplier =
-        document.getElementById(
-            "activityMultiplier"
-        );
-
-
-    if (
-        bmr !== null &&
-        activity > 0
-    ) {
-
-        const tdee =
-            bmr * activity;
-
-        const roundedTDEE =
-            Math.round(tdee);
-
-
-        tdeeValue.textContent =
-            roundedTDEE;
-
-        calculatorTDEE.textContent =
-            roundedTDEE +
-            " kcal";
-
-        activityMultiplier.textContent =
-            activity.toFixed(3);
-
-
-        updateCalorieTarget(
-            roundedTDEE
-        );
-
-    }
-
-    else {
-
-        tdeeValue.textContent =
-            "--";
-
-        calculatorTDEE.textContent =
-            "-- kcal";
-
-        activityMultiplier.textContent =
-            "--";
-    }
+function calculateBMR(age,height,weight,gender){
+ if(!age||!height||!weight||!gender)return null;
+ if(gender.toLowerCase()==="male")return 10*weight+6.25*height-5*age+5;
+ if(gender.toLowerCase()==="female")return 10*weight+6.25*height-5*age-161;
+ return null;
 }
 
-
-/* =========================================
-   CALORIE TARGET
-========================================= */
-
-function getCalorieTarget(tdee) {
-
-    if (
-        !tdee ||
-        tdee <= 0
-    ) {
-
-        return 2200;
-    }
-
-
-    const goal =
-        document.getElementById(
-            "goal"
-        ).value;
-
-
-    if (goal === "loss") {
-
-        return Math.max(
-            1200,
-            Math.round(
-                tdee - 500
-            )
-        );
-    }
-
-
-    if (goal === "gain") {
-
-        return Math.round(
-            tdee + 250
-        );
-    }
-
-
-    return Math.round(tdee);
+function bmiCategory(bmi){
+ if(bmi===null)return"Enter height and weight";
+ if(bmi<18.5)return"Underweight";
+ if(bmi<25)return"Normal range";
+ if(bmi<30)return"Overweight";
+ return"Obesity range";
 }
 
-
-/* =========================================
-   UPDATE CALORIE TARGET
-========================================= */
-
-function updateCalorieTarget(tdee) {
-
-    const target =
-        getCalorieTarget(tdee);
-
-
-    const targetElement =
-        document.getElementById(
-            "calorieTarget"
-        );
-
-
-    if (targetElement) {
-
-        targetElement.textContent =
-            target;
-    }
-
-
-    const total =
-        calculateNutrition();
-
-
-    updateProgress(
-        "calorieProgress",
-        total.calories,
-        target
-    );
+function getCalorieTarget(tdee){
+ const goal=appData.profile.goal||"loss";
+ if(goal==="loss")return Math.max(1200,Math.round(tdee-500));
+ if(goal==="gain")return Math.round(tdee+250);
+ return Math.round(tdee);
 }
 
+function calculateHealthMetrics(){
+ const p=appData.profile;
+ const age=Number(document.getElementById("age")?.value)||p.age;
+ const height=Number(document.getElementById("height")?.value)||p.height;
+ const weight=Number(document.getElementById("currentWeight")?.value)||p.currentWeight;
+ const gender=document.getElementById("gender")?.value||p.gender;
+ const activity=Number(document.getElementById("calculatorActivity")?.value)||p.activityLevel||1.2;
 
-/* =========================================
-   ADD FOOD
-========================================= */
+ const bmi=calculateBMI(height,weight);
+ const bmr=calculateBMR(age,height,weight,gender);
+ const tdee=bmr?bmr*activity:null;
 
-function addFood() {
+ setText("bmiValue",bmi!==null?bmi.toFixed(1):"--");
+ setText("bmiCategory",bmiCategory(bmi));
+ setText("bmrValue",bmr!==null?Math.round(bmr):"--");
+ setText("calculatorBMR",bmr!==null?Math.round(bmr)+" kcal":"-- kcal");
+ setText("tdeeValue",tdee!==null?Math.round(tdee):"--");
+ setText("calculatorTDEE",tdee!==null?Math.round(tdee)+" kcal":"-- kcal");
+ setText("activityMultiplier",tdee!==null?activity.toFixed(3):"--");
 
-    const name =
-        document.getElementById(
-            "foodName"
-        ).value.trim();
-
-
-    const meal =
-        document.getElementById(
-            "mealType"
-        ).value;
-
-
-    const quantity =
-        Number(
-            document.getElementById(
-                "foodQuantity"
-            ).value
-        ) || 0;
-
-
-    const calories =
-        Number(
-            document.getElementById(
-                "foodCalories"
-            ).value
-        ) || 0;
-
-
-    const protein =
-        Number(
-            document.getElementById(
-                "foodProtein"
-            ).value
-        ) || 0;
-
-
-    const carbs =
-        Number(
-            document.getElementById(
-                "foodCarbs"
-            ).value
-        ) || 0;
-
-
-    const fat =
-        Number(
-            document.getElementById(
-                "foodFat"
-            ).value
-        ) || 0;
-
-
-    const fiber =
-        Number(
-            document.getElementById(
-                "foodFiber"
-            ).value
-        ) || 0;
-
-
-    if (!name) {
-
-        alert(
-            "Please enter food name."
-        );
-
-        return;
-    }
-
-
-    const food = {
-
-        id: Date.now(),
-
-        name: name,
-
-        meal: meal,
-
-        quantity: quantity,
-
-        calories: calories,
-
-        protein: protein,
-
-        carbs: carbs,
-
-        fat: fat,
-
-        fiber: fiber
-    };
-
-
-    appData.foods.push(food);
-
-
-    saveData();
-
-    clearFoodForm();
-
-    renderFoods();
-
-    updateNutrition();
+ if(tdee) setText("calorieTarget",getCalorieTarget(tdee));
 }
 
+/* ---------- FOOD ---------- */
 
-/* =========================================
-   CLEAR FOOD FORM
-========================================= */
+function addFood(){
+ const v=id=>document.getElementById(id)?.value;
+ const name=(v("foodName")||"").trim();
+ if(!name){
+  showMessage("Please enter food name.");
+  return;
+ }
 
-function clearFoodForm() {
+ getDay().foods.push({
+  id:Date.now(),
+  name:name,
+  meal:v("mealType")||"Breakfast",
+  quantity:Number(v("foodQuantity"))||0,
+  calories:Number(v("foodCalories"))||0,
+  protein:Number(v("foodProtein"))||0,
+  carbs:Number(v("foodCarbs"))||0,
+  fat:Number(v("foodFat"))||0,
+  fiber:Number(v("foodFiber"))||0
+ });
 
-    document.getElementById(
-        "foodName"
-    ).value = "";
-
-
-    document.getElementById(
-        "foodQuantity"
-    ).value = "";
-
-
-    document.getElementById(
-        "foodCalories"
-    ).value = "";
-
-
-    document.getElementById(
-        "foodProtein"
-    ).value = "";
-
-
-    document.getElementById(
-        "foodCarbs"
-    ).value = "";
-
-
-    document.getElementById(
-        "foodFat"
-    ).value = "";
-
-
-    document.getElementById(
-        "foodFiber"
-    ).value = "";
+ saveData();
+ clearFoodForm();
+ renderFoods();
+ updateNutrition();
 }
 
-
-/* =========================================
-   RENDER FOODS
-========================================= */
-
-function renderFoods() {
-
-    const mealIds = {
-
-        "Breakfast": "Breakfast",
-
-        "Morning Snack": "MorningSnack",
-
-        "Lunch": "Lunch",
-
-        "Pre Workout": "PreWorkout",
-
-        "Post Workout": "PostWorkout",
-
-        "Evening Snack": "EveningSnack",
-
-        "Dinner": "Dinner"
-    };
-
-
-    Object.values(mealIds).forEach(
-        id => {
-
-            const element =
-                document.getElementById(id);
-
-            if (element) {
-
-                element.innerHTML =
-                    '<p class="food-info">No food added yet.</p>';
-            }
-        }
-    );
-
-
-    const grouped = {};
-
-
-    appData.foods.forEach(
-        food => {
-
-            if (!grouped[food.meal]) {
-
-                grouped[food.meal] = [];
-            }
-
-            grouped[food.meal].push(food);
-        }
-    );
-
-
-    Object.keys(grouped).forEach(
-        meal => {
-
-            const container =
-                document.getElementById(
-                    mealIds[meal]
-                );
-
-
-            if (!container) return;
-
-
-            container.innerHTML = "";
-
-
-            grouped[meal].forEach(
-                food => {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    item.className =
-                        "food-item";
-
-
-                    item.innerHTML = `
-
-                        <div>
-
-                            <strong>
-                                ${escapeHTML(food.name)}
-                            </strong>
-
-                            <span class="food-info">
-
-                                ${food.quantity}g/ml •
-
-                                ${food.calories} kcal •
-
-                                Protein ${food.protein}g •
-
-                                Carbs ${food.carbs}g •
-
-                                Fat ${food.fat}g •
-
-                                Fiber ${food.fiber}g
-
-                            </span>
-
-                        </div>
-
-
-                        <button
-                            class="delete-food"
-                            onclick="deleteFood(${food.id})">
-
-                            Delete
-
-                        </button>
-                    `;
-
-
-                    container.appendChild(item);
-                }
-            );
-        }
-    );
+function clearFoodForm(){
+ ["foodName","foodQuantity","foodCalories","foodProtein","foodCarbs","foodFat","foodFiber"].forEach(id=>{
+  const e=document.getElementById(id);
+  if(e)e.value="";
+ });
 }
 
+function renderFoods(){
+ const ids={
+  "Breakfast":"Breakfast",
+  "Morning Snack":"MorningSnack",
+  "Lunch":"Lunch",
+  "Pre Workout":"PreWorkout",
+  "Post Workout":"PostWorkout",
+  "Evening Snack":"EveningSnack",
+  "Dinner":"Dinner"
+ };
 
-/* =========================================
-   DELETE FOOD
-========================================= */
+ Object.values(ids).forEach(id=>{
+  const e=document.getElementById(id);
+  if(e)e.innerHTML='<p class="food-info">No food added yet.</p>';
+ });
 
-function deleteFood(id) {
+ const grouped={};
+ getDay().foods.forEach(f=>{
+  if(!grouped[f.meal])grouped[f.meal]=[];
+  grouped[f.meal].push(f);
+ });
 
-    appData.foods =
-        appData.foods.filter(
-            food => food.id !== id
-        );
-
-
-    saveData();
-
-    renderFoods();
-
-    updateNutrition();
+ Object.keys(grouped).forEach(meal=>{
+  const box=document.getElementById(ids[meal]);
+  if(!box)return;
+  box.innerHTML="";
+  grouped[meal].forEach(f=>{
+   const item=document.createElement("div");
+   item.className="food-item";
+   item.innerHTML=`
+    <div>
+     <strong>${escapeHTML(f.name)}</strong>
+     <span class="food-info">${f.quantity}g/ml • ${f.calories} kcal • Protein ${f.protein}g • Carbs ${f.carbs}g • Fat ${f.fat}g • Fiber ${f.fiber}g</span>
+    </div>
+    <button class="delete-food" onclick="deleteFood(${f.id})">Delete</button>`;
+   box.appendChild(item);
+  });
+ });
 }
 
-
-/* =========================================
-   CALCULATE NUTRITION
-========================================= */
-
-function calculateNutrition() {
-
-    let calories = 0;
-
-    let protein = 0;
-
-    let carbs = 0;
-
-    let fat = 0;
-
-    let fiber = 0;
-
-
-    appData.foods.forEach(
-        food => {
-
-            calories +=
-                Number(
-                    food.calories
-                ) || 0;
-
-            protein +=
-                Number(
-                    food.protein
-                ) || 0;
-
-            carbs +=
-                Number(
-                    food.carbs
-                ) || 0;
-
-            fat +=
-                Number(
-                    food.fat
-                ) || 0;
-
-            fiber +=
-                Number(
-                    food.fiber
-                ) || 0;
-        }
-    );
-
-
-    return {
-
-        calories,
-
-        protein,
-
-        carbs,
-
-        fat,
-
-        fiber
-    };
+function deleteFood(id){
+ getDay().foods=getDay().foods.filter(f=>f.id!==id);
+ saveData();
+ renderFoods();
+ updateNutrition();
 }
 
-
-/* =========================================
-   UPDATE NUTRITION
-========================================= */
-
-function updateNutrition() {
-
-    const total =
-        calculateNutrition();
-
-
-    document.getElementById(
-        "totalCalories"
-    ).textContent =
-        Math.round(
-            total.calories
-        );
-
-
-    document.getElementById(
-        "totalProtein"
-    ).textContent =
-        total.protein.toFixed(1);
-
-
-    document.getElementById(
-        "totalCarbs"
-    ).textContent =
-        total.carbs.toFixed(1);
-
-
-    document.getElementById(
-        "totalFat"
-    ).textContent =
-        total.fat.toFixed(1);
-
-
-    document.getElementById(
-        "totalFiber"
-    ).textContent =
-        total.fiber.toFixed(1);
-
-
-    let calorieTarget = 2200;
-
-
-    const age =
-        Number(
-            appData.profile.age
-        );
-
-    const height =
-        Number(
-            appData.profile.height
-        );
-
-    const weight =
-        Number(
-            appData.profile.currentWeight
-        );
-
-    const gender =
-        appData.profile.gender;
-
-    const activity =
-        Number(
-            appData.profile.activityLevel
-        );
-
-
-    const bmr =
-        calculateBMR(
-            age,
-            height,
-            weight,
-            gender
-        );
-
-
-    if (bmr !== null) {
-
-        const tdee =
-            bmr * activity;
-
-        calorieTarget =
-            getCalorieTarget(
-                tdee
-            );
-    }
-
-
-    document.getElementById(
-        "calorieTarget"
-    ).textContent =
-        calorieTarget;
-
-
-    updateProgress(
-        "calorieProgress",
-        total.calories,
-        calorieTarget
-    );
-
-
-    updateProgress(
-        "proteinProgress",
-        total.protein,
-        120
-    );
-
-
-    updateProgress(
-        "carbProgress",
-        total.carbs,
-        250
-    );
-
-
-    updateProgress(
-        "fatProgress",
-        total.fat,
-        70
-    );
-
-
-    updateProgress(
-        "fiberProgress",
-        total.fiber,
-        30
-    );
-
-
-    document.getElementById(
-        "reportCalories"
-    ).textContent =
-        Math.round(
-            total.calories
-        ) +
-        " kcal";
-
-
-    document.getElementById(
-        "reportProtein"
-    ).textContent =
-        total.protein.toFixed(1) +
-        " g";
-
-
-    document.getElementById(
-        "reportCarbs"
-    ).textContent =
-        total.carbs.toFixed(1) +
-        " g";
-
-
-    document.getElementById(
-        "reportFat"
-    ).textContent =
-        total.fat.toFixed(1) +
-        " g";
+function calculateNutrition(key=selectedDate){
+ const foods=getDay(key).foods;
+ return foods.reduce((t,f)=>({
+  calories:t.calories+(Number(f.calories)||0),
+  protein:t.protein+(Number(f.protein)||0),
+  carbs:t.carbs+(Number(f.carbs)||0),
+  fat:t.fat+(Number(f.fat)||0),
+  fiber:t.fiber+(Number(f.fiber)||0)
+ }),{calories:0,protein:0,carbs:0,fat:0,fiber:0});
 }
 
+function updateNutrition(){
+ const n=calculateNutrition();
+ setText("totalCalories",Math.round(n.calories));
+ setText("totalProtein",n.protein.toFixed(1));
+ setText("totalCarbs",n.carbs.toFixed(1));
+ setText("totalFat",n.fat.toFixed(1));
+ setText("totalFiber",n.fiber.toFixed(1));
 
-/* =========================================
-   PART 1 ENDS HERE
-   PART 2 KO ISKE JUST BAAD PASTE KARNA
-========================================= */
-/* =========================================
+ const p=appData.profile;
+ const bmr=calculateBMR(p.age,p.height,p.currentWeight,p.gender);
+ const target=bmr?getCalorieTarget(bmr*(p.activityLevel||1.2)):2200;
+
+ setText("calorieTarget",target);
+ updateProgress("calorieProgress",n.calories,target);
+ updateProgress("proteinProgress",n.protein,120);
+ updateProgress("carbProgress",n.carbs,250);
+ updateProgress("fatProgress",n.fat,70);
+ updateProgress("fiberProgress",n.fiber,30);
+
+ setText("reportCalories",Math.round(n.calories)+" kcal");
+ setText("reportProtein",n.protein.toFixed(1)+" g");
+ setText("reportCarbs",n.carbs.toFixed(1)+" g");
+ setText("reportFat",n.fat.toFixed(1)+" g");
+}
+
+/* ---------- WATER ---------- */
+
+function addWater(amount){
+ getDay().water=Math.min(10000,(Number(getDay().water)||0)+Number(amount));
+ saveData();
+ updateWater();
+}
+
+function resetWater(){
+ getDay().water=0;
+ saveData();
+ updateWater();
+}
+
+function updateWater(){
+ const amount=Number(getDay().water)||0;
+ setText("waterAmount",amount);
+ setText("reportWater",amount+" ml");
+ updateProgress("waterProgress",amount,3000);
+}
+
+/* ---------- MICRONUTRIENTS ---------- */
+
+const microInfo={
+ calcium:{unit:"mg",male:1000,female:1000},
+ magnesium:{unit:"mg",male:400,female:310},
+ iron:{unit:"mg",male:8,female:18},
+ sodium:{unit:"mg",male:2300,female:2300},
+ potassium:{unit:"mg",male:3400,female:2600},
+ zinc:{unit:"mg",male:11,female:8},
+ vitaminC:{unit:"mg",male:90,female:75},
+ vitaminD:{unit:"mcg",male:15,female:15},
+ omega3:{unit:"mg",male:1600,female:1100}
+};
+
+function updateMicronutrients(){
+ const d=getDay();
+ Object.keys(microInfo).forEach(name=>{
+  const info=microInfo[name];
+  const value=Number(d.micronutrients[name])||0;
+  const target=appData.profile.gender==="female"?info.female:info.male;
+
+  setText(name,value+" "+info.unit);
+  setText(name+"Target",target+" "+info.unit);
+
+  const input=document.getElementById(name+"Input");
+  if(input)input.value=value||"";
+
+  updateProgress(name+"Progress",value,target);
+ });
+}
+
+function saveMicronutrients(){
+ const d=getDay();
+ Object.keys(microInfo).forEach(name=>{
+  const input=document.getElementById(name+"Input");
+  if(input)d.micronutrients[name]=Math.max(0,Number(input.value)||0);
+ });
+ saveData();
+ updateMicronutrients();
+ showMessage("Micronutrients saved successfully!");
+}
+
+function resetMicronutrients(){
+ const d=getDay();
+ Object.keys(microInfo).forEach(name=>d.micronutrients[name]=0);
+ saveData();
+ updateMicronutrients();
+}
+
+/* ---------- HELPERS ---------- */
+
+function setText(id,value){
+ const e=document.getElementById(id);
+ if(e)e.textContent=value;
+}
+
+function updateProgress(id,value,target){
+ const e=document.getElementById(id);
+ if(!e||!target)return;
+ const percent=Math.min(100,Math.max(0,(Number(value)/Number(target))*100));
+ e.style.width=percent+"%";
+}
+
+function escapeHTML(value){
+ return String(value)
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;")
+ .replace(/'/g,"&#039;");
+}
+
+/* ---------- REFRESH ---------- */
+
+function refresh(){
+ updateDate();
+ loadProfile();
+ renderFoods();
+ updateNutrition();
+ updateWater();
+ updateMicronutrients();
+ calculateHealthMetrics();
+}
+
+/* =====================================================
+   PART 1 END
+   PART 2 ISKO DIRECTLY CONTINUE KAREGA
+===================================================== */
+/* =====================================================
    NUTRITRACK - SCRIPT.JS
    PART 2
-========================================= */
+   Weight + Activity + Exercise + History + Reports
+===================================================== */
 
+/* ---------- WEIGHT TRACKER ---------- */
 
-/* =========================================
-   PROGRESS
-========================================= */
+function addWeight(){
+ const input=document.getElementById("weightInput");
+ const timeEl=document.getElementById("weightTime");
+ const value=Number(input?.value)||0;
+ const time=timeEl?.value||"Morning";
 
-function updateProgress(
-    id,
-    value,
-    target
-) {
+ if(value<=0){
+  showMessage("Please enter a valid weight.");
+  return;
+ }
 
-    const element =
-        document.getElementById(id);
+ const entry={
+  id:Date.now(),
+  date:selectedDate,
+  time:time,
+  weight:value
+ };
 
-    if (!element || !target) {
-        return;
-    }
+ appData.weights.push(entry);
 
-    let percentage =
-        (value / target) * 100;
+ if(!appData.profile.currentWeight){
+  appData.profile.currentWeight=value;
+  const e=document.getElementById("currentWeight");
+  if(e)e.value=value;
+ }
 
-    percentage =
-        Math.min(
-            Math.max(
-                percentage,
-                0
-            ),
-            100
-        );
+ saveData();
 
-    element.style.width =
-        percentage + "%";
+ if(input)input.value="";
+
+ renderWeights();
+ updateGoal();
+ calculateHealthMetrics();
+ showMessage("Weight saved successfully!");
 }
 
-
-/* =========================================
-   WATER
-========================================= */
-
-function addWater(amount) {
-
-    appData.water += amount;
-
-    if (appData.water > 10000) {
-
-        appData.water = 10000;
-    }
-
-    saveData();
-
-    updateWater();
+function deleteWeight(id){
+ appData.weights=appData.weights.filter(w=>w.id!==id);
+ saveData();
+ renderWeights();
+ updateGoal();
 }
 
+function renderWeights(){
+ const history=document.getElementById("weightHistory");
+ if(!history)return;
 
-function resetWater() {
+ const today=appData.weights.filter(w=>w.date===selectedDate);
 
-    appData.water = 0;
+ const morning=today.find(w=>w.time==="Morning");
+ const evening=today.find(w=>w.time==="Evening");
 
-    saveData();
+ setText("morningWeight",morning?morning.weight+" kg":"--");
+ setText("eveningWeight",evening?evening.weight+" kg":"--");
 
-    updateWater();
+ const latest=appData.weights[appData.weights.length-1];
+ setText("latestWeight",latest?latest.weight+" kg":"--");
+
+ if(!appData.weights.length){
+  history.innerHTML='<p class="food-info">No weight records yet.</p>';
+  return;
+ }
+
+ history.innerHTML=`
+  <div class="weight-row">
+   <strong>Date</strong>
+   <strong>Time</strong>
+   <strong>Weight</strong>
+   <strong>Action</strong>
+  </div>`;
+
+ [...appData.weights].reverse().forEach(w=>{
+  history.innerHTML+=`
+   <div class="weight-row">
+    <span>${formatDate(w.date)}</span>
+    <span>${escapeHTML(w.time)}</span>
+    <span>${w.weight} kg</span>
+    <button class="delete-food" onclick="deleteWeight(${w.id})">Delete</button>
+   </div>`;
+ });
 }
 
+/* ---------- GOAL ---------- */
 
-function updateWater() {
+function updateGoal(){
+ const target=Number(appData.profile.targetWeight)||0;
+ let current=Number(appData.profile.currentWeight)||0;
 
-    const waterAmount =
-        document.getElementById(
-            "waterAmount"
-        );
+ if(appData.weights.length){
+  current=Number(appData.weights[appData.weights.length-1].weight)||current;
+ }
 
-    if (!waterAmount) {
-        return;
-    }
+ setText("goalTargetWeight",target>0?target+" kg":"--");
+ setText("goalCurrentWeight",current>0?current+" kg":"--");
 
+ if(!current||!target){
+  setText("goalProgressText","0%");
+  updateProgress("goalProgress",0,100);
+  return;
+ }
 
-    waterAmount.textContent =
-        appData.water;
+ let start=Number(appData.startingWeight)||0;
 
+ if(!start){
+  start=current;
+  appData.startingWeight=start;
+  localStorage.setItem("nutriStartingWeight",start);
+ }
 
-    updateProgress(
-        "waterProgress",
-        appData.water,
-        3000
-    );
+ let percent=0;
 
+ if(start>target){
+  const total=start-target;
+  percent=((start-current)/total)*100;
+ }else if(start<target){
+  const total=target-start;
+  percent=((current-start)/total)*100;
+ }else{
+  percent=100;
+ }
 
-    const reportWater =
-        document.getElementById(
-            "reportWater"
-        );
+ percent=Math.min(100,Math.max(0,percent));
 
-    if (reportWater) {
-
-        reportWater.textContent =
-            appData.water +
-            " ml";
-    }
+ setText("goalProgressText",Math.round(percent)+"%");
+ updateProgress("goalProgress",percent,100);
 }
 
+/* ---------- ACTIVITY ---------- */
 
-/* =========================================
-   WEIGHT
-========================================= */
+function saveActivity(){
+ const d=getDay();
 
-function addWeight() {
+ d.activity.steps=Number(document.getElementById("steps")?.value)||0;
+ d.activity.walking=Number(document.getElementById("walking")?.value)||0;
+ d.activity.workout=Number(document.getElementById("workout")?.value)||0;
 
-    const value =
-        Number(
-            document.getElementById(
-                "weightInput"
-            ).value
-        );
-
-
-    const time =
-        document.getElementById(
-            "weightTime"
-        ).value;
-
-
-    if (!value || value <= 0) {
-
-        alert(
-            "Please enter a valid weight."
-        );
-
-        return;
-    }
-
-
-    const entry = {
-
-        id: Date.now(),
-
-        date:
-            new Date().toLocaleDateString(
-                "en-IN"
-            ),
-
-        time: time,
-
-        weight: value
-    };
-
-
-    appData.weights.push(
-        entry
-    );
-
-
-    if (
-        !appData.profile.currentWeight ||
-        appData.profile.currentWeight <= 0
-    ) {
-
-        appData.profile.currentWeight =
-            value;
-
-
-        const currentWeight =
-            document.getElementById(
-                "currentWeight"
-            );
-
-
-        if (currentWeight) {
-
-            currentWeight.value =
-                value;
-        }
-    }
-
-
-    saveData();
-
-
-    document.getElementById(
-        "weightInput"
-    ).value = "";
-
-
-    renderWeights();
-
-    updateGoal();
-
-    calculateHealthMetrics();
-
-    updateNutrition();
+ saveData();
+ updateActivity();
+ showMessage("Activity saved successfully!");
 }
 
+function updateActivity(){
+ const d=getDay();
 
-/* =========================================
-   RENDER WEIGHTS
-========================================= */
+ const steps=document.getElementById("steps");
+ const walking=document.getElementById("walking");
+ const workout=document.getElementById("workout");
 
-function renderWeights() {
+ if(steps)steps.value=d.activity.steps||"";
+ if(walking)walking.value=d.activity.walking||"";
+ if(workout)workout.value=d.activity.workout||"";
 
-    const history =
-        document.getElementById(
-            "weightHistory"
-        );
-
-
-    if (!history) {
-        return;
-    }
-
-
-    if (
-        appData.weights.length === 0
-    ) {
-
-        history.innerHTML =
-            "<p class='food-info'>No weight records yet.</p>";
-
-
-        const morningWeight =
-            document.getElementById(
-                "morningWeight"
-            );
-
-
-        const eveningWeight =
-            document.getElementById(
-                "eveningWeight"
-            );
-
-
-        const latestWeight =
-            document.getElementById(
-                "latestWeight"
-            );
-
-
-        if (morningWeight) {
-            morningWeight.textContent =
-                "--";
-        }
-
-
-        if (eveningWeight) {
-            eveningWeight.textContent =
-                "--";
-        }
-
-
-        if (latestWeight) {
-            latestWeight.textContent =
-                "--";
-        }
-
-
-        return;
-    }
-
-
-    const today =
-        new Date().toLocaleDateString(
-            "en-IN"
-        );
-
-
-    const todayWeights =
-        appData.weights.filter(
-            item =>
-                item.date === today
-        );
-
-
-    const morning =
-        todayWeights.find(
-            item =>
-                item.time === "Morning"
-        );
-
-
-    const evening =
-        todayWeights.find(
-            item =>
-                item.time === "Evening"
-        );
-
-
-    const morningWeight =
-        document.getElementById(
-            "morningWeight"
-        );
-
-
-    const eveningWeight =
-        document.getElementById(
-            "eveningWeight"
-        );
-
-
-    if (morningWeight) {
-
-        morningWeight.textContent =
-            morning
-                ? morning.weight + " kg"
-                : "--";
-    }
-
-
-    if (eveningWeight) {
-
-        eveningWeight.textContent =
-            evening
-                ? evening.weight + " kg"
-                : "--";
-    }
-
-
-    const latest =
-        appData.weights[
-            appData.weights.length - 1
-        ];
-
-
-    const latestWeight =
-        document.getElementById(
-            "latestWeight"
-        );
-
-
-    if (latestWeight) {
-
-        latestWeight.textContent =
-            latest.weight +
-            " kg";
-    }
-
-
-    history.innerHTML = `
-
-        <div class="weight-row">
-
-            <strong>
-                Date
-            </strong>
-
-            <strong>
-                Time
-            </strong>
-
-            <strong>
-                Weight
-            </strong>
-
-            <strong>
-                Action
-            </strong>
-
-        </div>
-
-    `;
-
-
-    [
-        ...appData.weights
-    ]
-        .reverse()
-        .forEach(
-            item => {
-
-                history.innerHTML += `
-
-                    <div class="weight-row">
-
-                        <span>
-                            ${item.date}
-                        </span>
-
-                        <span>
-                            ${item.time}
-                        </span>
-
-                        <span>
-                            ${item.weight} kg
-                        </span>
-
-
-                        <button
-                            class="delete-food"
-                            onclick="deleteWeight(${item.id})">
-
-                            Delete
-
-                        </button>
-
-                    </div>
-
-                `;
-            }
-        );
+ setText("reportSteps",d.activity.steps||0);
 }
 
+/* ---------- EXERCISE TRACKER ---------- */
 
-/* =========================================
-   DELETE WEIGHT
-========================================= */
+function addExercise(){
+ const nameInput=document.getElementById("exerciseName");
+ const categoryInput=document.getElementById("exerciseCategory");
+ const setsInput=document.getElementById("exerciseSets");
+ const repsInput=document.getElementById("exerciseReps");
 
-function deleteWeight(id) {
+ const name=(nameInput?.value||"").trim();
 
-    appData.weights =
-        appData.weights.filter(
-            item =>
-                item.id !== id
-        );
+ if(!name){
+  showMessage("Please enter exercise name.");
+  return;
+ }
 
+ const exercise={
+  id:Date.now(),
+  name:name,
+  category:categoryInput?.value||"General",
+  sets:Number(setsInput?.value)||0,
+  reps:Number(repsInput?.value)||0
+ };
 
-    saveData();
+ getDay().exercises.push(exercise);
 
-    renderWeights();
+ saveData();
 
-    updateGoal();
+ if(nameInput)nameInput.value="";
+ if(setsInput)setsInput.value="";
+ if(repsInput)repsInput.value="";
+
+ renderExercises();
 }
 
-
-/* =========================================
-   GOAL PROGRESS
-========================================= */
-
-function updateGoal() {
-
-    const target =
-        Number(
-            appData.profile.targetWeight
-        );
-
-
-    let current =
-        Number(
-            appData.profile.currentWeight
-        );
-
-
-    if (
-        appData.weights.length > 0
-    ) {
-
-        current =
-            Number(
-                appData.weights[
-                    appData.weights.length - 1
-                ].weight
-            );
-    }
-
-
-    const goalTargetWeight =
-        document.getElementById(
-            "goalTargetWeight"
-        );
-
-
-    const goalCurrentWeight =
-        document.getElementById(
-            "goalCurrentWeight"
-        );
-
-
-    if (goalTargetWeight) {
-
-        goalTargetWeight.textContent =
-            target > 0
-                ? target + " kg"
-                : "--";
-    }
-
-
-    if (goalCurrentWeight) {
-
-        goalCurrentWeight.textContent =
-            current > 0
-                ? current + " kg"
-                : "--";
-    }
-
-
-    if (
-        !current ||
-        !target ||
-        current <= 0 ||
-        target <= 0
-    ) {
-
-        const goalProgressText =
-            document.getElementById(
-                "goalProgressText"
-            );
-
-
-        const goalProgress =
-            document.getElementById(
-                "goalProgress"
-            );
-
-
-        if (goalProgressText) {
-
-            goalProgressText.textContent =
-                "0%";
-        }
-
-
-        if (goalProgress) {
-
-            goalProgress.style.width =
-                "0%";
-        }
-
-
-        return;
-    }
-
-
-    let starting =
-        Number(
-            localStorage.getItem(
-                "nutriStartingWeight"
-            )
-        );
-
-
-    if (
-        !starting ||
-        starting <= 0
-    ) {
-
-        starting =
-            current;
-
-
-        localStorage.setItem(
-            "nutriStartingWeight",
-            starting
-        );
-    }
-
-
-    let percentage = 0;
-
-
-    if (
-        starting > target
-    ) {
-
-        const totalDistance =
-            starting - target;
-
-
-        const completed =
-            starting - current;
-
-
-        percentage =
-            (
-                completed /
-                totalDistance
-            ) * 100;
-
-    }
-
-
-    else if (
-        starting < target
-    ) {
-
-        const totalDistance =
-            target - starting;
-
-
-        const completed =
-            current - starting;
-
-
-        percentage =
-            (
-                completed /
-                totalDistance
-            ) * 100;
-
-    }
-
-
-    else {
-
-        percentage = 100;
-    }
-
-
-    percentage =
-        Math.min(
-            Math.max(
-                percentage,
-                0
-            ),
-            100
-        );
-
-
-    const goalProgressText =
-        document.getElementById(
-            "goalProgressText"
-        );
-
-
-    const goalProgress =
-        document.getElementById(
-            "goalProgress"
-        );
-
-
-    if (goalProgressText) {
-
-        goalProgressText.textContent =
-            Math.round(
-                percentage
-            ) +
-            "%";
-    }
-
-
-    if (goalProgress) {
-
-        goalProgress.style.width =
-            percentage +
-            "%";
-    }
+function deleteExercise(id){
+ getDay().exercises=getDay().exercises.filter(e=>e.id!==id);
+ saveData();
+ renderExercises();
 }
 
+function renderExercises(){
+ const box=document.getElementById("exerciseList");
+ if(!box)return;
 
-/* =========================================
-   ACTIVITY
-========================================= */
+ const exercises=getDay().exercises;
 
-function saveActivity() {
+ if(!exercises.length){
+  box.innerHTML='<p class="food-info">No exercises added for this day.</p>';
+  return;
+ }
 
-    appData.activity.steps =
-        Number(
-            document.getElementById(
-                "steps"
-            ).value
-        ) || 0;
+ box.innerHTML="";
 
+ exercises.forEach(e=>{
+  const item=document.createElement("div");
+  item.className="food-item";
 
-    appData.activity.walking =
-        Number(
-            document.getElementById(
-                "walking"
-            ).value
-        ) || 0;
+  item.innerHTML=`
+   <div>
+    <strong>${escapeHTML(e.name)}</strong>
+    <span class="food-info">
+     ${escapeHTML(e.category)}
+     ${e.sets?" • "+e.sets+" sets":""}
+     ${e.reps?" • "+e.reps+" reps":""}
+    </span>
+   </div>
+   <button class="delete-food" onclick="deleteExercise(${e.id})">Delete</button>`;
 
-
-    appData.activity.workout =
-        Number(
-            document.getElementById(
-                "workout"
-            ).value
-        ) || 0;
-
-
-    saveData();
-
-    updateActivity();
-
-
-    alert(
-        "Activity saved successfully!"
-    );
+  box.appendChild(item);
+ });
 }
 
+/* ---------- DAILY DEFICIT ---------- */
 
-/* =========================================
-   UPDATE ACTIVITY
-========================================= */
+function getDailyBurn(){
+ const p=appData.profile;
+ const bmr=calculateBMR(
+  Number(p.age),
+  Number(p.height),
+  Number(p.currentWeight),
+  p.gender
+ );
 
-function updateActivity() {
+ if(!bmr)return 0;
 
-    const steps =
-        document.getElementById(
-            "steps"
-        );
-
-
-    const walking =
-        document.getElementById(
-            "walking"
-        );
-
-
-    const workout =
-        document.getElementById(
-            "workout"
-        );
-
-
-    if (steps) {
-
-        steps.value =
-            appData.activity.steps || "";
-    }
-
-
-    if (walking) {
-
-        walking.value =
-            appData.activity.walking || "";
-    }
-
-
-    if (workout) {
-
-        workout.value =
-            appData.activity.workout || "";
-    }
-
-
-    const reportSteps =
-        document.getElementById(
-            "reportSteps"
-        );
-
-
-    if (reportSteps) {
-
-        reportSteps.textContent =
-            appData.activity.steps || 0;
-    }
+ return Math.round(
+  bmr*(Number(p.activityLevel)||1.2)
+ );
 }
 
+function getDailyDeficit(key){
+ const intake=calculateNutrition(key).calories;
 
-/* =========================================
-   RESET TODAY
-========================================= */
+ const p=appData.profile;
+ const bmr=calculateBMR(
+  Number(p.age),
+  Number(p.height),
+  Number(p.currentWeight),
+  p.gender
+ );
 
-function resetToday() {
+ if(!bmr)return 0;
 
-    const confirmReset =
-        confirm(
-            "Are you sure you want to delete today's food, water and activity data?"
-        );
+ const burn=Math.round(
+  bmr*(Number(p.activityLevel)||1.2)
+ );
 
-
-    if (!confirmReset) {
-
-        return;
-    }
-
-
-    appData.foods = [];
-
-
-    appData.water = 0;
-
-
-    appData.activity = {
-
-        steps: 0,
-
-        walking: 0,
-
-        workout: 0
-    };
-
-
-    saveData();
-
-
-    renderFoods();
-
-    updateNutrition();
-
-    updateWater();
-
-    updateActivity();
-
-
-    alert(
-        "Today's nutrition and activity data has been reset."
-    );
+ return burn-intake;
 }
 
+/* ---------- HISTORY ---------- */
 
-/* =========================================
-   SECURITY
-========================================= */
+function getLastDays(count){
+ const result=[];
+ const today=new Date(selectedDate+"T00:00:00");
 
-function escapeHTML(value) {
+ for(let i=count-1;i>=0;i--){
+  const d=new Date(today);
+  d.setDate(today.getDate()-i);
 
-    return String(value)
+  result.push(getDateKey(d));
+ }
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+ return result;
 }
 
+function renderHistory(){
+ const box=document.getElementById("historyList");
+ if(!box)return;
 
-/* =========================================
-   START APP
-========================================= */
+ const days=getLastDays(7);
 
-function initializeApp() {
+ box.innerHTML=`
+  <div class="history-row">
+   <strong>Date</strong>
+   <strong>Calories</strong>
+   <strong>Burn</strong>
+   <strong>Deficit</strong>
+  </div>`;
 
-    updateDate();
+ days.forEach(key=>{
+  const calories=Math.round(calculateNutrition(key).calories);
+  const burn=getDailyBurn();
+  const deficit=burn-calories;
 
-    loadProfile();
-
-    renderFoods();
-
-    updateNutrition();
-
-    updateWater();
-
-    renderWeights();
-
-    updateActivity();
-
-    updateGoal();
-
-    calculateHealthMetrics();
+  box.innerHTML+=`
+   <div class="history-row">
+    <span>${formatDate(key)}</span>
+    <span>${calories} kcal</span>
+    <span>${burn?burn+" kcal":"--"}</span>
+    <span>${burn?deficit+" kcal":"--"}</span>
+   </div>`;
+ });
 }
 
+/* ---------- WEEKLY GRAPH ---------- */
 
-/* =========================================
-   RUN APP
-========================================= */
+function renderWeeklyGraph(){
+ const canvas=document.getElementById("weeklyChart");
+ if(!canvas)return;
+
+ const ctx=canvas.getContext("2d");
+ const days=getLastDays(7);
+
+ const calories=days.map(d=>
+  Math.round(calculateNutrition(d).calories)
+ );
+
+ const burn=days.map(()=>
+  getDailyBurn()
+ );
+
+ const max=Math.max(
+  1000,
+  ...calories,
+  ...burn
+ );
+
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ const padding=45;
+ const width=canvas.width-padding*2;
+ const height=canvas.height-padding*2;
+
+ ctx.strokeStyle="#d1d5db";
+ ctx.lineWidth=1;
+
+ ctx.beginPath();
+ ctx.moveTo(padding,padding);
+ ctx.lineTo(padding,padding+height);
+ ctx.lineTo(padding+width,padding+height);
+ ctx.stroke();
+
+ const step=width/6;
+
+ calories.forEach((value,i)=>{
+  const x=padding+i*step;
+  const y=padding+height-(value/max)*height;
+
+  ctx.fillStyle="#16a34a";
+  ctx.beginPath();
+  ctx.arc(x,y,5,0,Math.PI*2);
+  ctx.fill();
+
+  if(i>0){
+   const old=calories[i-1];
+   const ox=padding+(i-1)*step;
+   const oy=padding+height-(old/max)*height;
+
+   ctx.strokeStyle="#16a34a";
+   ctx.lineWidth=2;
+   ctx.beginPath();
+   ctx.moveTo(ox,oy);
+   ctx.lineTo(x,y);
+   ctx.stroke();
+  }
+
+  ctx.fillStyle="#374151";
+  ctx.font="11px Arial";
+  ctx.textAlign="center";
+
+  const short=days[i].slice(5);
+  ctx.fillText(short,x,canvas.height-18);
+ });
+
+ burn.forEach((value,i)=>{
+  const x=padding+i*step;
+  const y=padding+height-(value/max)*height;
+
+  ctx.fillStyle="#ef4444";
+  ctx.beginPath();
+  ctx.arc(x,y,4,0,Math.PI*2);
+  ctx.fill();
+
+  if(i>0){
+   const old=burn[i-1];
+   const ox=padding+(i-1)*step;
+   const oy=padding+height-(old/max)*height;
+
+   ctx.strokeStyle="#ef4444";
+   ctx.lineWidth=2;
+   ctx.beginPath();
+   ctx.moveTo(ox,oy);
+   ctx.lineTo(x,y);
+   ctx.stroke();
+  }
+ });
+}
+
+/* ---------- DAILY REPORT ---------- */
+
+function prepareDailyReport(){
+ const n=calculateNutrition();
+
+ setText("reportDate",formatDate(selectedDate));
+ setText("reportCalories",Math.round(n.calories)+" kcal");
+ setText("reportProtein",n.protein.toFixed(1)+" g");
+ setText("reportCarbs",n.carbs.toFixed(1)+" g");
+ setText("reportFat",n.fat.toFixed(1)+" g");
+ setText("reportWater",getDay().water+" ml");
+ setText("reportDeficit",getDailyDeficit(selectedDate)+" kcal");
+ setText("reportWeight",getDayWeight(selectedDate));
+
+ updateActivity();
+ updateMicronutrients();
+}
+
+function getDayWeight(key){
+ const list=appData.weights.filter(w=>w.date===key);
+ if(!list.length)return"--";
+ return list[list.length-1].weight+" kg";
+}
+
+/* ---------- PRINT DAILY ---------- */
+
+function printDailyReport(){
+ prepareDailyReport();
+
+ const n=calculateNutrition();
+ const d=getDay();
+ const burn=getDailyBurn();
+ const deficit=burn?burn-n.calories:0;
+
+ const html=`
+  <html>
+  <head>
+   <title>NutriTrack Daily Report</title>
+   <style>
+    body{font-family:Arial;padding:30px;color:#17201a}
+    h1{color:#16a34a}
+    .box{border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px}
+    table{width:100%;border-collapse:collapse}
+    td,th{border:1px solid #ddd;padding:8px;text-align:left}
+   </style>
+  </head>
+  <body>
+   <h1>NutriTrack - Daily Report</h1>
+   <p><b>Date:</b> ${formatDate(selectedDate)}</p>
+
+   <div class="box">
+    <h2>Nutrition</h2>
+    <table>
+     <tr><th>Calories</th><td>${Math.round(n.calories)} kcal</td></tr>
+     <tr><th>Protein</th><td>${n.protein.toFixed(1)} g</td></tr>
+     <tr><th>Carbs</th><td>${n.carbs.toFixed(1)} g</td></tr>
+     <tr><th>Fat</th><td>${n.fat.toFixed(1)} g</td></tr>
+     <tr><th>Fiber</th><td>${n.fiber.toFixed(1)} g</td></tr>
+    </table>
+   </div>
+
+   <div class="box">
+    <h2>Water & Energy</h2>
+    <p>Water: ${d.water} ml</p>
+    <p>Estimated Burn: ${burn||"--"} kcal</p>
+    <p>Deficit/Surplus: ${burn?deficit:"--"} kcal</p>
+    <p>Weight: ${getDayWeight(selectedDate)}</p>
+   </div>
+
+   <div class="box">
+    <h2>Activity</h2>
+    <p>Steps: ${d.activity.steps||0}</p>
+    <p>Walking: ${d.activity.walking||0} min</p>
+    <p>Workout: ${d.activity.workout||0} min</p>
+   </div>
+
+   <div class="box">
+    <h2>Exercises</h2>
+    ${d.exercises.length?d.exercises.map(e=>`<p>• ${escapeHTML(e.name)} — ${escapeHTML(e.category)}</p>`).join(""):"<p>No exercises recorded.</p>"}
+   </div>
+  </body>
+  </html>`;
+
+ const win=window.open("","_blank");
+ if(!win){
+  showMessage("Please allow pop-ups for printing.");
+  return;
+ }
+
+ win.document.write(html);
+ win.document.close();
+ win.focus();
+
+ setTimeout(()=>win.print(),400);
+}
+
+/* ---------- WEEKLY REPORT PRINT ---------- */
+
+function printWeeklyReport(){
+ const days=getLastDays(7);
+
+ let rows="";
+ let totalCalories=0;
+ let totalDeficit=0;
+
+ days.forEach(key=>{
+  const calories=Math.round(calculateNutrition(key).calories);
+  const burn=getDailyBurn();
+  const deficit=burn?burn-calories:0;
+
+  totalCalories+=calories;
+  totalDeficit+=deficit;
+
+  rows+=`
+   <tr>
+    <td>${formatDate(key)}</td>
+    <td>${calories} kcal</td>
+    <td>${burn?burn+" kcal":"--"}</td>
+    <td>${burn?deficit+" kcal":"--"}</td>
+    <td>${getDayWeight(key)}</td>
+   </tr>`;
+ });
+
+ const html=`
+  <html>
+  <head>
+   <title>NutriTrack Weekly Report</title>
+   <style>
+    body{font-family:Arial;padding:30px;color:#17201a}
+    h1{color:#16a34a}
+    table{width:100%;border-collapse:collapse;margin-top:20px}
+    th,td{border:1px solid #ddd;padding:9px;text-align:left}
+    th{background:#ecfdf5}
+    .summary{display:flex;gap:20px;flex-wrap:wrap;margin:20px 0}
+    .box{border:1px solid #ddd;border-radius:10px;padding:15px}
+   </style>
+  </head>
+  <body>
+   <h1>NutriTrack - Weekly Report</h1>
+   <p>Last 7 days ending ${formatDate(selectedDate)}</p>
+
+   <div class="summary">
+    <div class="box"><b>Total Calories</b><br>${totalCalories} kcal</div>
+    <div class="box"><b>Average Calories</b><br>${Math.round(totalCalories/7)} kcal/day</div>
+    <div class="box"><b>Total Deficit</b><br>${totalDeficit} kcal</div>
+   </div>
+
+   <table>
+    <tr>
+     <th>Date</th>
+     <th>Calories</th>
+     <th>Estimated Burn</th>
+     <th>Deficit / Surplus</th>
+     <th>Weight</th>
+    </tr>
+    ${rows}
+   </table>
+  </body>
+  </html>`;
+
+ const win=window.open("","_blank");
+
+ if(!win){
+  showMessage("Please allow pop-ups for printing.");
+  return;
+ }
+
+ win.document.write(html);
+ win.document.close();
+ win.focus();
+
+ setTimeout(()=>win.print(),400);
+}
+
+/* ---------- RESET SELECTED DAY ---------- */
+
+function resetToday(){
+ if(!confirm("Delete all data for "+formatDate(selectedDate)+"?"))return;
+
+ delete appData.days[selectedDate];
+
+ saveData();
+ getDay(selectedDate);
+ refresh();
+
+ showMessage("Selected day has been reset.");
+}
+
+/* ---------- FULL REFRESH ---------- */
+
+function refresh(){
+ updateDate();
+ renderFoods();
+ updateNutrition();
+ updateWater();
+ updateMicronutrients();
+ renderWeights();
+ updateGoal();
+ updateActivity();
+ renderExercises();
+ calculateHealthMetrics();
+ renderHistory();
+ renderWeeklyGraph();
+ prepareDailyReport();
+}
+
+/* ---------- INITIALIZE ---------- */
+
+function initializeApp(){
+ loadProfile();
+ getDay(selectedDate);
+ refresh();
+}
 
 initializeApp();
